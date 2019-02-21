@@ -1,25 +1,44 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const ethers = require("./ether/ethersHelper");
 
-const app = express();
+// 0x0598aC83C088f126B3043059FCfd2E7A5F0886FF
+// ethers
+//   .estimateFees(
+//     "ropsten",
+//     "0x5854265dc36e266d14dcffab96c5661e19dcd7db8a2614158d203267991f672e",
+//     "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF",
+//     "1"
+//   )
+//   .then(data => {
+//     console.log(data);
+//   });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors);
-
-const Wallet = require("./wallet");
-const wallet = new Wallet();
-
-console.log(wallet.restore("restore"));
-// console.log(Wallet.create());
-// let createdWallet = wallet.create();
-// createdWallet.then(response => {
-//   console.log(response);
-//   // let json = JSON.stringify(response);
-//   // console.log(json);
+// ethers.getGasPrice().then(data => {
+//   console.log(data);
 // });
 
-module.exports = {
-  Wallet
-};
+// Wallet History
+// ethers
+//   .getHistory("xcs", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
+//   .then(data => {
+//     console.log(data);
+//   });
+
+// ethers.getBlockNumber().then(data => {
+//   console.log(data);
+// });
+
+// Ether price
+// ethers.getEtherPrice().then(data => {
+//   console.log(data);
+// });
+
+// BALANCE
+// ethers
+//   .getBalance("rinkeby", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
+//   .then(data => {
+//     console.log(data);
+//   });
+
+// module.exports = {
+//   Wallet
+// };
