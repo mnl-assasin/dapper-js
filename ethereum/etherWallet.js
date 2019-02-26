@@ -4,17 +4,20 @@ const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
 class EtherWallet {
   create() {
-    return result.build(ethers.create());
+    return Promise.resolve(result.build(ethers.create()));
+    // return new Promise((resolve, reject) => {
+    //   Promise.resolve(result.build(ethers.create()));
+    // });
   }
 
-  restore(request) {
+  async restore(request) {
     if (isUndefined(request)) {
-      return errors.UNDEFINED;
+      return Promise.reject(errors.UNDEFINED);
     } else {
       try {
-        return result.build(ethers.restore(request.mnemonic));
+        return Promise.resolve(result.build(ethers.restore(request.mnemonic)));
       } catch (error) {
-        return error;
+        return Promise.reject(error);
       }
     }
   }

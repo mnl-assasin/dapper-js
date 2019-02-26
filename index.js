@@ -1,21 +1,45 @@
 // const ethers = require("./ether/ethersHelper");
 
 const Wallet = require("./wallet");
-const Error = require("./builder/errors");
-// console.log(Wallet.ethers.restore());
+
+// Sample for create
+// Wallet.ethers.create().then(data => {
+//   console.log(data);
+// });
+
+// Sample for restore
 Wallet.ethers
-  .balance({
-    provider: "ropsten",
-    address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
+  .restore({
+    mnemonic:
+      "crunch soldier universe crunch flight clip urge chalk giant silver g tank"
   })
   .then(data => {
-    console.log("index data: ");
     console.log(data);
   })
+  .error(error => {
+    console.log("Index error: ");
+    console.log(error);
+  })
   .catch(error => {
-    console.log("index error: ");
+    console.log("Index catch: ");
     console.log(error);
   });
+
+// console.log(Wallet.ethers.restore());
+
+// Wallet.ethers
+//   .balance({
+//     provider: "mainnet",
+//     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
+//   })
+//   .then(data => {
+//     console.log("index data: ");
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("index error: ");
+//     console.log(error);
+//   });
 // console.log(Error[400]);
 module.exports = {
   Wallet
