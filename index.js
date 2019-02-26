@@ -16,10 +16,6 @@ Wallet.ethers
   .then(data => {
     console.log(data);
   })
-  .error(error => {
-    console.log("Index error: ");
-    console.log(error);
-  })
   .catch(error => {
     console.log("Index catch: ");
     console.log(error);

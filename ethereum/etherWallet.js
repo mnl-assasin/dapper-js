@@ -14,11 +14,17 @@ class EtherWallet {
     if (isUndefined(request)) {
       return Promise.reject(errors.UNDEFINED);
     } else {
-      try {
-        return Promise.resolve(result.build(ethers.restore(request.mnemonic)));
-      } catch (error) {
-        return Promise.reject(error);
-      }
+      return new Promise((resolve, reject) => {
+        try {
+          let data = result.build(ethers.restore(request.mnemonic));
+        } catch (error) {}
+      });
+      // try {
+      //   let data = result.build(ethers.restore(request.mnemonic));
+      //   Promise.resolve(data);
+      // } catch (error) {
+      //   return Promise.reject(error);
+      // }
     }
   }
 
