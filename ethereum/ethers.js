@@ -1,10 +1,8 @@
 const ethers = require("ethers");
+const errors = require("../builder/errors");
 const Wallet = ethers.Wallet;
 const utils = ethers.utils;
 const providers = ethers.providers;
-
-const ErrorBuilder = require("../util/errorBuilder");
-const errorBuilder = new ErrorBuilder();
 
 class EthersHelper {
   createWallet(wallet) {
@@ -18,7 +16,12 @@ class EthersHelper {
   }
 
   getProvider(network) {
-    return ethers.getDefaultProvider(network);
+    try {
+      return ethers.getDefaultProvider(network);
+    } catch (error) {
+      console.log(error);
+      throw errors.UNSUPPORTED_OPERATION(error);
+    }
   }
 
   create() {
@@ -28,29 +31,25 @@ class EthersHelper {
   restore(mnemonic) {
     try {
       return this.createWallet(Wallet.fromMnemonic(mnemonic));
-    } catch (error) {
-      console.log(error);
-      return error;
+    } catch (err) {
+      console.log(err);
+      throw errors.INVALID_MNEMONIC;
     }
   }
 
-  // balance returns on BigNumber format
   async getBalance(network, address) {
-    let balance = await this.getProvider(network).getBalance(address);
-    return {
-      balance: this.bigNumberToEther(balance)
-    };
+    try {
+      let balance = await this.getProvider(network).getBalance(address);
+      return {
+        balance: this.bigNumberToEther(balance)
+      };
+    } catch (error) {
+      // INVALID ADDRESS
+      throw errors.INVALID_ADDRESS;
+    }
   }
 
   // etherScan
-
-  // Current blockNumber of selected network
-  async getBlockNumber(network) {
-    let blockNumber = await this.getProvider(network).getBlockNumber();
-    return {
-      blockNumber
-    };
-  }
 
   // Price in USD currency
   async getEtherPrice() {
@@ -75,6 +74,14 @@ class EthersHelper {
     return transactions;
   }
 
+  // Current blockNumber of selected network
+  async getBlockNumber(network) {
+    let blockNumber = await this.getProvider(network).getBlockNumber();
+    return {
+      blockNumber
+    };
+  }
+
   async getGasPrice(network) {
     let gasPrice = await this.getProvider(network).getGasPrice();
     return {
@@ -84,7 +91,6 @@ class EthersHelper {
 
   async estimateFees(network, privateKey, address, value) {
     let provider = this.getProvider(network);
-    let wallet = new ethers.Wallet(privateKey, provider);
 
     let transaction = {
       to: address,

@@ -1,5 +1,33 @@
-const ethers = require("./ether/ethersHelper");
+// const ethers = require("./ether/ethersHelper");
 
+const Wallet = require("./wallet");
+const Error = require("./builder/errors");
+// console.log(Wallet.ethers.restore());
+Wallet.ethers
+  .balance({
+    provider: "ropsten",
+    address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
+  })
+  .then(data => {
+    console.log("index data: ");
+    console.log(data);
+  })
+  .catch(error => {
+    console.log("index error: ");
+    console.log(error);
+  });
+// console.log(Error[400]);
+module.exports = {
+  Wallet
+};
+// ethers
+//   .getBalance("ropsten", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
+//   .then(data => {
+//     console.log(JSON.stringify(data));
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
 // 0x0598aC83C088f126B3043059FCfd2E7A5F0886FF
 // ethers
 //   .estimateFees(
@@ -18,9 +46,9 @@ const ethers = require("./ether/ethersHelper");
 
 // Wallet History
 // ethers
-//   .getHistory("xcs", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
+//   .getHistory("kovan", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
 //   .then(data => {
-//     console.log(data);
+//     console.log(JSON.stringify(data));
 //   });
 
 // ethers.getBlockNumber().then(data => {
@@ -38,7 +66,21 @@ const ethers = require("./ether/ethersHelper");
 //   .then(data => {
 //     console.log(data);
 //   });
-
+// ethers
+//   .restore("")
+//   .then(data => {})
+//   .catch(error => {
+//     console.log(error);
+//   });
+// ethers
+//   .getBalance("", "")
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log(error.code);
+//   });
 // module.exports = {
 //   Wallet
 // };
+// console.log(ethers.restore(""));
