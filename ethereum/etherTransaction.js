@@ -35,6 +35,14 @@ class EtherTransaction {
     console.log(request);
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
+    }
+    if (
+      isUndefined(request.privateKey) ||
+      isUndefined(request.address) ||
+      isUndefined(request.value) ||
+      isUndefined(request.gasLimit)
+    ) {
+      throw errors.MISSING_PARAMS;
     } else {
       let data = await ethers.sendTransaction(
         request.network,

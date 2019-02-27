@@ -145,7 +145,12 @@ class EthersHelper {
   }
 
   stringToBigNumber(string) {
-    return utils.bigNumberify(string);
+    try {
+      return utils.bigNumberify(string);
+    } catch (error) {
+      console.log(error);
+      throw errors.INVALID_BIG_NUMBER;
+    }
   }
 }
 
