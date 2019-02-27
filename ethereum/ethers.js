@@ -60,17 +60,21 @@ class EthersHelper {
   }
 
   async getHistory(network, address) {
-    let provider = new ethers.providers.EtherscanProvider(network);
-    let transactions = await provider.getHistory(address, 0, 99999999);
-    transactions.map((val, key) => {
-      let { gasPrice, gasLimit, value } = val;
-      val.gasPrice = gasPrice.toString();
-      val.gasLimit = gasLimit.toString();
-      val.value = this.bigNumberToEther(value);
-      return val;
-    });
+    try {
+      let provider = new ethers.providers.EtherscanProvider(network);
+      let transactions = await provider.getHistory(address, 0, 99999999);
+      transactions.map((val, key) => {
+        let { gasPrice, gasLimit, value } = val;
+        val.gasPrice = gasPrice.toString();
+        val.gasLimit = gasLimit.toString();
+        val.value = this.bigNumberToEther(value);
+        return val;
+      });
 
-    return transactions;
+      return transactions;
+    } catch (error) {
+      throw errors.INVALID_ADDRESS;
+    }
   }
 
   // Current blockNumber of selected network
@@ -88,28 +92,30 @@ class EthersHelper {
     };
   }
 
-  async estimateFees(network, privateKey, address, value) {
-    let provider = this.getProvider(network);
+  async estimateFees(network, address, value) {
+    try {
+      let provider = this.getProvider(network);
+      let transaction = {
+        to: address,
+        value: this.stringToETH(value)
+      };
+      let gasCost = await provider.estimateGas(transaction);
+      let gasPrice = await provider.getGasPrice(network);
+      let fee = gasCost.mul(gasPrice);
+      let total = this.stringToETH(value).add(fee);
 
-    let transaction = {
-      to: address,
-      value: this.stringToETH(value)
-    };
-    let gasCost = await provider.estimateGas(transaction);
-    let gasPrice = await provider.getGasPrice(network);
-    let fee = gasCost.mul(gasPrice);
-    let total = this.stringToETH(value).add(fee);
-
-    let data = {
-      gasCost: gasCost.toString(),
-      gasPrice: gasPrice.toString(),
-      estimatedFeeString: utils.formatEther(fee),
-      estimatedFee: parseFloat(utils.formatEther(fee)),
-      estimatedTotalString: utils.formatEther(total),
-      estimatedTotal: parseFloat(utils.formatEther(total))
-    };
-
-    return data;
+      let data = {
+        gasCost: gasCost.toString(),
+        gasPrice: gasPrice.toString(),
+        estimatedFeeString: utils.formatEther(fee),
+        estimatedFee: parseFloat(utils.formatEther(fee)),
+        estimatedTotalString: utils.formatEther(total),
+        estimatedTotal: parseFloat(utils.formatEther(total))
+      };
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async sendTransaction(network, privateKey, address, value, gasLimit, data) {
@@ -131,7 +137,11 @@ class EthersHelper {
   }
 
   stringToETH(string) {
-    return utils.parseEther(string);
+    try {
+      return utils.parseEther(string);
+    } catch (error) {
+      throw errors.INVALID_ETH_VALUE;
+    }
   }
 
   stringToBigNumber(string) {

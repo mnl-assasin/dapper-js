@@ -1,7 +1,5 @@
-// const ethers = require("./ether/ethersHelper");
-
 const Wallet = require("./wallet");
-
+const Transaction = require("./transaction");
 // Sample for create
 // Wallet.ethers.create().then(data => {
 //   console.log(data);
@@ -24,7 +22,7 @@ const Wallet = require("./wallet");
 // Sample for balance
 // Wallet.ethers
 //   .balance({
-//     provider: "mainnet",
+//     provider: "rinkeby",
 //     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
 //   })
 //   .then(data => {
@@ -34,6 +32,61 @@ const Wallet = require("./wallet");
 //     console.log("Index catch:");
 //     console.log(error);
 //   });
+
+// Sample for history
+// Wallet.ethers
+//   .history({
+//     provider: "kovan",
+//     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch: ");
+//     console.log(error);
+//   });
+
+// Sample for Gas Price
+// Transaction.ethers
+//   .gasPrice({
+//     address: "ropsten"
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch");
+//     console.log(error);
+//   });
+
+// Sample for Estimate Fee
+// Transaction.ethers
+//   .estimateFees({
+//     network: "ropsten",
+//     value: "0.01"
+//   })
+//   .then(data => {
+//     // console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch");
+//     console.log(error);
+//   });
+
+// Sample for Transferring ETH
+Transaction.ethers
+  .send({
+    privateKey:
+      "0x5854265dc36e266d14dcffab96c5661e19dcd7db8a2614158d203267991f672e"
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.log("Index Error");
+    console.log(error);
+  });
 
 // console.log(Wallet.ethers.restore());
 
@@ -52,7 +105,8 @@ const Wallet = require("./wallet");
 //   });
 // console.log(Error[400]);
 module.exports = {
-  Wallet
+  Wallet,
+  Transaction
 };
 // ethers
 //   .getBalance("ropsten", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")

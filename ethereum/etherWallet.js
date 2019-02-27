@@ -26,7 +26,17 @@ class EtherWallet {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     } else {
-      return await ethers.getBalance(request.provider, request.address);
+      let data = await ethers.getBalance(request.provider, request.address);
+      return result.build(data);
+    }
+  }
+
+  async history(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else {
+      let data = await ethers.getHistory(request.network, request.address);
+      return result.build(data);
     }
   }
 }

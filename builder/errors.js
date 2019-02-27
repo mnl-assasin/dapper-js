@@ -22,9 +22,16 @@ let INVALID_ADDRESS = errorBuilder.build(
   "INVALID ADDRESS",
   "The address you requested is invalid"
 );
+
+let INVALID_ETH_VALUE = errorBuilder.build(
+  405,
+  "INVALID ETH VALUE",
+  "The supplied ETH value is invalid"
+);
 module.exports = {
   UNDEFINED,
   INVALID_MNEMONIC,
   UNSUPPORTED_OPERATION,
-  INVALID_ADDRESS
+  INVALID_ADDRESS,
+  INVALID_ETH_VALUE
 };
