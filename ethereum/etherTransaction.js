@@ -4,6 +4,11 @@ const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
 
 class EtherTransaction {
+  async etherPrice() {
+    let data = await ethers.getEtherPrice();
+    return result.build(data);
+  }
+
   async gasPrice(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;

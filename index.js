@@ -47,6 +47,11 @@ const Transaction = require("./transaction");
 //     console.log(error);
 //   });
 
+// Sample for ETH Value in USD
+Transaction.ethers.etherPrice().then(data => {
+  console.log(data);
+});
+
 // Sample for Gas Price
 // Transaction.ethers
 //   .gasPrice({
@@ -75,19 +80,19 @@ const Transaction = require("./transaction");
 //   });
 
 // Sample for Transferring ETH
-Transaction.ethers
-  .send({
-    privateKey:
-      "0x5854265dc36e266d14dcffab96c5661e19dcd7db8a2614158d203267991f672e",
-    value: 1
-  })
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.log("Index Error");
-    console.log(error);
-  });
+// Transaction.ethers
+//   .send({
+//     privateKey:
+//       "0x5854265dc36e266d14dcffab96c5661e19dcd7db8a2614158d203267991f672e",
+//     value: 1
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index Error");
+//     console.log(error);
+//   });
 
 module.exports = {
   Wallet,
