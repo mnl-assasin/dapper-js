@@ -18,6 +18,14 @@ class EtherTransaction {
     }
   }
 
+  async blockNumber(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    }
+    let data = await ethers.getBlockNumber(request.network);
+    return result.build(data);
+  }
+
   // network not required;
   // address not required;
   // notice that estimate fee is the same with different testnets and mainnet

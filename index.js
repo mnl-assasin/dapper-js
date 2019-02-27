@@ -48,9 +48,9 @@ const Transaction = require("./transaction");
 //   });
 
 // Sample for ETH Value in USD
-Transaction.ethers.etherPrice().then(data => {
-  console.log(data);
-});
+// Transaction.ethers.etherPrice().then(data => {
+//   console.log(data);
+// });
 
 // Sample for Gas Price
 // Transaction.ethers
@@ -64,6 +64,17 @@ Transaction.ethers.etherPrice().then(data => {
 //     console.log("Index catch");
 //     console.log(error);
 //   });
+
+// Sample for Blocknumber
+Transaction.ethers
+  .blockNumber()
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.log("Index catch");
+    console.log(error);
+  });
 
 // Sample for Estimate Fee
 // Transaction.ethers
