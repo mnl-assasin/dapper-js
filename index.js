@@ -8,18 +8,32 @@ const Wallet = require("./wallet");
 // });
 
 // Sample for restore
-Wallet.ethers
-  .restore({
-    mnemonic:
-      "crunch soldier universe crunch flight clip urge chalk giant silver g tank"
-  })
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.log("Index catch: ");
-    console.log(error);
-  });
+// Wallet.ethers
+//   .restore({
+//     mnemonic:
+//       "crunch soldier universe crunch flight clip urge chalk giant silver rug tank"
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch: ");
+//     console.log(error);
+//   });
+
+// Sample for balance
+// Wallet.ethers
+//   .balance({
+//     provider: "mainnet",
+//     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch:");
+//     console.log(error);
+//   });
 
 // console.log(Wallet.ethers.restore());
 

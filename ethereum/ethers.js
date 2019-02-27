@@ -32,7 +32,6 @@ class EthersHelper {
     try {
       return this.createWallet(Wallet.fromMnemonic(mnemonic));
     } catch (err) {
-      console.log(err);
       throw errors.INVALID_MNEMONIC;
     }
   }
