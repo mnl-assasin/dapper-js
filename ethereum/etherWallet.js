@@ -3,12 +3,6 @@ const result = require("../builder/resultBuilder");
 const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
 class EtherWallet {
-  getHelper() {
-    // will be using this for a while
-    // will be replace when api is ready
-    return ethers
-  }
-
   create() {
     return Promise.resolve(result.build(ethers.create()));
   }
@@ -32,7 +26,17 @@ class EtherWallet {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     } else {
-      return await ethers.getBalance(request.provider, request.address);
+      let data = await ethers.getBalance(request.provider, request.address);
+      return result.build(data);
+    }
+  }
+
+  async history(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else {
+      let data = await ethers.getHistory(request.network, request.address);
+      return result.build(data);
     }
   }
 }

@@ -22,9 +22,30 @@ let INVALID_ADDRESS = errorBuilder.build(
   "INVALID ADDRESS",
   "The address you requested is invalid"
 );
+
+let INVALID_ETH_VALUE = errorBuilder.build(
+  405,
+  "INVALID ETH VALUE",
+  "The supplied ETH value is invalid"
+);
+
+let INVALID_BIG_NUMBER = errorBuilder.build(
+  406,
+  "INVALID BIG NUMBER",
+  "The supplied Big Number value is invalid"
+);
+
+let MISSING_PARAMS = errorBuilder.build(
+  407,
+  "MISSING PARAMETERS",
+  "The supplied number of parameters does not match the function"
+);
 module.exports = {
   UNDEFINED,
   INVALID_MNEMONIC,
   UNSUPPORTED_OPERATION,
-  INVALID_ADDRESS
+  INVALID_ADDRESS,
+  INVALID_ETH_VALUE,
+  INVALID_BIG_NUMBER,
+  MISSING_PARAMS
 };

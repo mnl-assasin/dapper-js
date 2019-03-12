@@ -1,11 +1,11 @@
-// const ethers = require("./ether/ethersHelper");
-
 const Wallet = require("./wallet");
-
+const Transaction = require("./transaction");
 // Sample for create
 // Wallet.ethers.create().then(data => {
 //   console.log(data);
 // });
+
+// let createWallet = Wallet.ethers.create();
 
 // Sample for restore
 // Wallet.ethers
@@ -24,7 +24,7 @@ const Wallet = require("./wallet");
 // Sample for balance
 // Wallet.ethers
 //   .balance({
-//     provider: "mainnet",
+//     provider: "rinkeby",
 //     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
 //   })
 //   .then(data => {
@@ -35,86 +35,79 @@ const Wallet = require("./wallet");
 //     console.log(error);
 //   });
 
-// console.log(Wallet.ethers.restore());
-
+// Sample for history
 // Wallet.ethers
-//   .balance({
-//     provider: "mainnet",
+//   .history({
+//     provider: "kovan",
 //     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
 //   })
 //   .then(data => {
-//     console.log("index data: ");
 //     console.log(data);
 //   })
 //   .catch(error => {
-//     console.log("index error: ");
+//     console.log("Index catch: ");
 //     console.log(error);
 //   });
-// console.log(Error[400]);
+
+// Sample for ETH Value in USD
+// Transaction.ethers.etherPrice().then(data => {
+//   console.log(data);
+// });
+
+// Sample for Gas Price
+// Transaction.ethers
+//   .gasPrice({
+//     address: "ropsten"
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch");
+//     console.log(error);
+//   });
+
+// Sample for Blocknumber
+// Transaction.ethers
+//   .blockNumber()
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch");
+//     console.log(error);
+//   });
+
+// Sample for Estimate Fee
+// Transaction.ethers
+//   .estimateFees({
+//     network: "ropsten",
+//     value: "0.01"
+//   })
+//   .then(data => {
+//     // console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch");
+//     console.log(error);
+//   });
+
+// Sample for Transferring ETH
+// Transaction.ethers
+//   .send({
+//     privateKey:
+//       "0x5854265dc36e266d14dcffab96c5661e19dcd7db8a2614158d203267991f672e",
+//     value: 1
+//   })
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index Error");
+//     console.log(error);
+//   });
+
 module.exports = {
-  Wallet
+  Wallet,
+  Transaction
 };
-// ethers
-//   .getBalance("ropsten", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
-//   .then(data => {
-//     console.log(JSON.stringify(data));
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   });
-// 0x0598aC83C088f126B3043059FCfd2E7A5F0886FF
-// ethers
-//   .estimateFees(
-//     "ropsten",
-//     "0x5854265dc36e266d14dcffab96c5661e19dcd7db8a2614158d203267991f672e",
-//     "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF",
-//     "1"
-//   )
-//   .then(data => {
-//     console.log(data);
-//   });
-
-// ethers.getGasPrice().then(data => {
-//   console.log(data);
-// });
-
-// Wallet History
-// ethers
-//   .getHistory("kovan", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
-//   .then(data => {
-//     console.log(JSON.stringify(data));
-//   });
-
-// ethers.getBlockNumber().then(data => {
-//   console.log(data);
-// });
-
-// Ether price
-// ethers.getEtherPrice().then(data => {
-//   console.log(data);
-// });
-
-// BALANCE
-// ethers
-//   .getBalance("rinkeby", "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF")
-//   .then(data => {
-//     console.log(data);
-//   });
-// ethers
-//   .restore("")
-//   .then(data => {})
-//   .catch(error => {
-//     console.log(error);
-//   });
-// ethers
-//   .getBalance("", "")
-//   .then(data => {
-//     console.log(data);
-//   })
-//   .catch(error => {
-//     console.log(error.code);
-//   });
-// module.exports = {
-//   Wallet
-// };
-// console.log(ethers.restore(""));
