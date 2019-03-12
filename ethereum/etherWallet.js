@@ -3,6 +3,12 @@ const result = require("../builder/resultBuilder");
 const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
 class EtherWallet {
+  getHelper() {
+    // will be using this for a while
+    // will be replace when api is ready
+    return ethers
+  }
+
   create() {
     return Promise.resolve(result.build(ethers.create()));
   }
