@@ -19,7 +19,6 @@ class EthersHelper {
     try {
       return ethers.getDefaultProvider(network);
     } catch (error) {
-      console.log(error);
       throw errors.UNSUPPORTED_OPERATION(error);
     }
   }

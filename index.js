@@ -5,6 +5,8 @@ const Transaction = require("./transaction");
 //   console.log(data);
 // });
 
+// let createWallet = Wallet.ethers.create();
+
 // Sample for restore
 // Wallet.ethers
 //   .restore({
@@ -66,15 +68,15 @@ const Transaction = require("./transaction");
 //   });
 
 // Sample for Blocknumber
-Transaction.ethers
-  .blockNumber()
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.log("Index catch");
-    console.log(error);
-  });
+// Transaction.ethers
+//   .blockNumber()
+//   .then(data => {
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.log("Index catch");
+//     console.log(error);
+//   });
 
 // Sample for Estimate Fee
 // Transaction.ethers
