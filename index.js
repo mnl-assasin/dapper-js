@@ -6,7 +6,18 @@ const Transaction = require("./transaction");
 // });
 
 // let createWallet = Wallet.ethers.create();
-
+Wallet.ethers
+  .createHDWallet({
+    mnemonic:
+      "crunch soldier universe crunch flight clip urge chalk giant silver rug tank",
+    path: 0
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
 // Sample for restore
 // Wallet.ethers
 //   .restore({

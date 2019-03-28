@@ -7,6 +7,19 @@ class EtherWallet {
     return Promise.resolve(result.build(ethers.create()));
   }
 
+  createHDWallet(request) {
+    return new Promise((resolve, reject) => {
+      try {
+        let data = result.build(
+          ethers.createHDWallet(request.mnemonic, request.path)
+        );
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   restore(request) {
     return new Promise((resolve, reject) => {
       if (isUndefined(request)) {

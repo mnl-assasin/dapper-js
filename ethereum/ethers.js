@@ -5,13 +5,15 @@ const utils = ethers.utils;
 const providers = ethers.providers;
 
 class EthersHelper {
-  createWallet(wallet) {
+  createWallet(wallet, path) {
+    // console.log(wallet);
     let signingKey = wallet.signingKey;
     return {
       mnemonic: signingKey.mnemonic,
       privateKey: signingKey.keyPair.privateKey,
       publicKey: signingKey.keyPair.publicKey,
-      address: signingKey.address
+      address: signingKey.address,
+      path: path
     };
   }
 
@@ -24,12 +26,24 @@ class EthersHelper {
   }
 
   create() {
-    return this.createWallet(Wallet.createRandom());
+    return this.createWallet(Wallet.createRandom(), 0);
+  }
+
+  createHDWallet(mnemonic, path) {
+    try {
+      let derivationPath = "m/44'/60'/0'/0/" + path;
+      return this.createWallet(
+        Wallet.fromMnemonic(mnemonic, derivationPath),
+        path
+      );
+    } catch (err) {
+      throw errors.INVALID_MNEMONIC;
+    }
   }
 
   restore(mnemonic) {
     try {
-      return this.createWallet(Wallet.fromMnemonic(mnemonic));
+      return this.createWallet(Wallet.fromMnemonic(mnemonic), 0);
     } catch (err) {
       throw errors.INVALID_MNEMONIC;
     }
