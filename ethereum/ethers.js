@@ -148,9 +148,7 @@ class EthersHelper {
   }
 
   async executeNoParams(privateKey, network, address, abi, method) {
-    console.log("executeNoParams");
-    let provider = ethers.providers.getDefaultProvider(network);
-    let wallet = new Wallet(privateKey, provider);
+    let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
 
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method]();
@@ -161,17 +159,15 @@ class EthersHelper {
   }
 
   async executeWithParams(privateKey, network, address, abi, method, params) {
-    console.log("executeWithParams");
-    let provider = ethers.providers.getDefaultProvider(network);
-    let wallet = new Wallet(privateKey, provider);
+    let wallet = new Wallet(privateKey, this.getProvider(network));
 
-    let parameters = [];
-    let jsonObject = JSON.parse(params);
-    for (var key in jsonObject) {
-      parameters.push(jsonObject[key]);
-    }
+    // let parameters = [];
+    // let jsonObject = JSON.parse(params);
+    // for (var key in jsonObject) {
+    //   parameters.push(jsonObject[key]);
+    // }
     let contract = this.getContract(address, abi, wallet);
-    let result = await contract[method](...parameters);
+    let result = await contract[method](...params);
     let data = {
       result: result.toString()
     };

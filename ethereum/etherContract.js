@@ -9,14 +9,12 @@ class EtherContract {
   }
 
   async executeNoParams(request) {
-    console.log("executeNoParams");
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     } else if (
       isUndefined(request.privateKey) ||
       isUndefined(request.network) ||
       isUndefined(request.address) ||
-      isUndefined(request.network) ||
       isUndefined(request.abi) ||
       isUndefined(request.method)
     ) {
@@ -33,15 +31,13 @@ class EtherContract {
     }
   }
 
-  async executeWithParams(privateKey, network, address, abi, method, params) {
-    console.log("executeWithParams");
+  async executeWithParams(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     } else if (
       isUndefined(request.privateKey) ||
       isUndefined(request.network) ||
       isUndefined(request.address) ||
-      isUndefined(request.network) ||
       isUndefined(request.abi) ||
       isUndefined(request.method) ||
       isUndefined(request.params)
