@@ -143,6 +143,52 @@ class EthersHelper {
     return await wallet.sendTransaction(transaction);
   }
 
+  getContract(address, abi, wallet) {
+    return new ethers.Contract(address, abi, wallet);
+  }
+
+  async executeNoParams(privateKey, network, address, abi, method) {
+    console.log("executeNoParams");
+    let provider = ethers.providers.getDefaultProvider(network);
+    let wallet = new Wallet(privateKey, provider);
+
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method]();
+    let data = {
+      result: result.toString()
+    };
+    return data;
+  }
+
+  async executeWithParams(privateKey, network, address, abi, method, params) {
+    console.log("executeWithParams");
+    let provider = ethers.providers.getDefaultProvider(network);
+    let wallet = new Wallet(privateKey, provider);
+
+    let parameters = [];
+    let jsonObject = JSON.parse(params);
+    for (var key in jsonObject) {
+      parameters.push(jsonObject[key]);
+    }
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method](...parameters);
+    let data = {
+      result: result.toString()
+    };
+
+    return data;
+  }
+
+  async execute(privateKey, network, address, abi, method, payload) {
+    let provider = ethers.providers.getDefaultProvider(network);
+    let wallet = new Wallet(privateKey, provider);
+
+    let contract = this.getContract(address, abi, wallet);
+    let data = await contract[method](payload);
+
+    return data;
+  }
+
   // Convert Bn to Ether
   // 1 Eth = 1,000,000,000,000,000,000 wei
   bigNumberToEther(bigNumber) {

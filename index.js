@@ -1,23 +1,13 @@
 const Wallet = require("./wallet");
 const Transaction = require("./transaction");
+const Contract = require("./contract");
 // Sample for create
 // Wallet.ethers.create().then(data => {
 //   console.log(data);
 // });
 
 // let createWallet = Wallet.ethers.create();
-Wallet.ethers
-  .createHDWallet({
-    mnemonic:
-      "crunch soldier universe crunch flight clip urge chalk giant silver rug tank",
-    path: 0
-  })
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+
 // Sample for restore
 // Wallet.ethers
 //   .restore({
@@ -47,18 +37,18 @@ Wallet.ethers
 //   });
 
 // Sample for history
-// Wallet.ethers
-//   .history({
-//     provider: "kovan",
-//     address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
-//   })
-//   .then(data => {
-//     console.log(data);
-//   })
-//   .catch(error => {
-//     console.log("Index catch: ");
-//     console.log(error);
-//   });
+Wallet.ethers
+  .history({
+    provider: "ropsten",
+    address: "0x0598aC83C088f126B3043059FCfd2E7A5F0886FF"
+  })
+  .then(data => {
+    console.log(JSON.stringify(data));
+  })
+  .catch(error => {
+    console.log("Index catch: ");
+    console.log(error);
+  });
 
 // Sample for ETH Value in USD
 // Transaction.ethers.etherPrice().then(data => {
@@ -120,5 +110,6 @@ Wallet.ethers
 
 module.exports = {
   Wallet,
-  Transaction
+  Transaction,
+  Contract
 };
