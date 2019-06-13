@@ -99,10 +99,33 @@ class EthersHelper {
   }
 
   async getGasPrice(network) {
+    console.log("getGasPrice:" + network);
     let gasPrice = await this.getProvider(network).getGasPrice();
     return {
-      gasPrice: gasPrice.toString()
+      network: network,
+      gasPrice: gasPrice,
+      gasPriceString: gasPrice.toString()
     };
+  }
+
+  async estimateGas(network, address, value) {
+    try {
+      let transaction = {
+        to: address,
+        value: value
+      };
+
+      let estimatedGas = await this.getProvider(network).estimateGas(
+        transaction
+      );
+
+      return {
+        estimatedGas: estimatedGas,
+        estimatedGasString: estimatedGas.toString()
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async estimateFees(network, address, value) {
@@ -141,6 +164,48 @@ class EthersHelper {
     };
 
     return await wallet.sendTransaction(transaction);
+  }
+
+  getContract(address, abi, wallet) {
+    return new ethers.Contract(address, abi, wallet);
+  }
+
+  async executeNoParams(privateKey, network, address, abi, method) {
+    let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method]();
+    let data = {
+      result: result.toString()
+    };
+    return data;
+  }
+
+  async executeWithParams(privateKey, network, address, abi, method, params) {
+    let wallet = new Wallet(privateKey, this.getProvider(network));
+
+    // let parameters = [];
+    // let jsonObject = JSON.parse(params);
+    // for (var key in jsonObject) {
+    //   parameters.push(jsonObject[key]);
+    // }
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method](...params);
+    let data = {
+      result: result
+    };
+
+    return data;
+  }
+
+  async execute(privateKey, network, address, abi, method, payload) {
+    let provider = ethers.providers.getDefaultProvider(network);
+    let wallet = new Wallet(privateKey, provider);
+
+    let contract = this.getContract(address, abi, wallet);
+    let data = await contract[method](payload);
+
+    return data;
   }
 
   // Convert Bn to Ether

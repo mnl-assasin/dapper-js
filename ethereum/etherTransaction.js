@@ -18,6 +18,19 @@ class EtherTransaction {
     }
   }
 
+  async estimateGasCost(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else {
+      let data = await ethers.estimateGas(
+        request.network,
+        request.address,
+        request.value
+      );
+      return result.build(data);
+    }
+  }
+
   async blockNumber(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
