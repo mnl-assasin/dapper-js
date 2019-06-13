@@ -170,6 +170,19 @@ class EthersHelper {
     return new ethers.Contract(address, abi, wallet);
   }
 
+  async deployContract(privateKey, network, abi, bytecode) {
+    let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+
+    // ADD CONTRACT DEPLOYMENT HERE
+
+    let factory = new ethers.ContractFactory(abi, bytecode, wallet);
+    let contract = await factory.deploy(5);
+    console.log(contract.address);
+    // console.log(contract);
+    // console.log(contract.deployTransaction.hash);
+    await contract.deployed();
+  }
+
   async executeNoParams(privateKey, network, address, abi, method) {
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
 
@@ -208,6 +221,13 @@ class EthersHelper {
     return data;
   }
 
+  // TODO: CHRISZER ADD LOGIC HERE; DELETE THIS COMMENT THIS AFTER
+  async status(network, transactionHash) {
+    // DO THE LOGIC HERE
+    // RETURN THE DATA HERE
+  }
+
+  // DONT ADD FUCNCTION AFTER THIS
   // Convert Bn to Ether
   // 1 Eth = 1,000,000,000,000,000,000 wei
   bigNumberToEther(bigNumber) {

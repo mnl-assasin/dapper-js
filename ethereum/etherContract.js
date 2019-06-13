@@ -8,6 +8,26 @@ class EtherContract {
     return new ethers.Contract(address, abi, wallet);
   }
 
+  async deployContract(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else if (
+      isUndefined(request.privateKey) ||
+      isUndefined(request.network) ||
+      isUndefined(request.abi) ||
+      isUndefined(request.bytecode)
+    ) {
+      throw errors.MISSING_PARAMS;
+    } else {
+      ethers.deployContract(
+        request.privateKey,
+        request.network,
+        request.abi,
+        request.bytecode
+      );
+    }
+  }
+
   async executeNoParams(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
