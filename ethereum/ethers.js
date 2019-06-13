@@ -99,10 +99,33 @@ class EthersHelper {
   }
 
   async getGasPrice(network) {
+    console.log("getGasPrice:" + network);
     let gasPrice = await this.getProvider(network).getGasPrice();
     return {
-      gasPrice: gasPrice.toString()
+      network: network,
+      gasPrice: gasPrice,
+      gasPriceString: gasPrice.toString()
     };
+  }
+
+  async estimateGas(network, address, value) {
+    try {
+      let transaction = {
+        to: address,
+        value: value
+      };
+
+      let estimatedGas = await this.getProvider(network).estimateGas(
+        transaction
+      );
+
+      return {
+        estimatedGas: estimatedGas,
+        estimatedGasString: estimatedGas.toString()
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async estimateFees(network, address, value) {
@@ -147,6 +170,19 @@ class EthersHelper {
     return new ethers.Contract(address, abi, wallet);
   }
 
+  async deployContract(privateKey, network, abi, bytecode) {
+    let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+
+    // ADD CONTRACT DEPLOYMENT HERE
+
+    let factory = new ethers.ContractFactory(abi, bytecode, wallet);
+    let contract = await factory.deploy(5);
+    console.log(contract.address);
+    // console.log(contract);
+    // console.log(contract.deployTransaction.hash);
+    await contract.deployed();
+  }
+
   async executeNoParams(privateKey, network, address, abi, method) {
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
 
@@ -169,7 +205,7 @@ class EthersHelper {
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params);
     let data = {
-      result: result.toString()
+      result: result
     };
 
     return data;
@@ -185,6 +221,13 @@ class EthersHelper {
     return data;
   }
 
+  // TODO: CHRISZER ADD LOGIC HERE; DELETE THIS COMMENT THIS AFTER
+  async status(network, transactionHash) {
+    // DO THE LOGIC HERE
+    // RETURN THE DATA HERE
+  }
+
+  // DONT ADD FUCNCTION AFTER THIS
   // Convert Bn to Ether
   // 1 Eth = 1,000,000,000,000,000,000 wei
   bigNumberToEther(bigNumber) {

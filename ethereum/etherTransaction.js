@@ -18,6 +18,19 @@ class EtherTransaction {
     }
   }
 
+  async estimateGasCost(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else {
+      let data = await ethers.estimateGas(
+        request.network,
+        request.address,
+        request.value
+      );
+      return result.build(data);
+    }
+  }
+
   async blockNumber(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
@@ -66,6 +79,20 @@ class EtherTransaction {
         request.data
       );
 
+      return result.build(data);
+    }
+  }
+
+  // TODO: CHRISZER ADD TRY CATCH ON ELSE FUNCTION; DELETE THIS COMMENT THIS AFTER
+  async getStatus(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    }
+    if (isUndefined(request.network) || isUndefined(request.transactionHash)) {
+      throw errors.MISSING_PARAMS;
+    } else {
+      let data = await ethers.status(request.network, request.transactionHash);
+      // TODO: ADD TRY CATCH HERE
       return result.build(data);
     }
   }
