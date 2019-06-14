@@ -53,6 +53,17 @@ class EtherTransaction {
         request.value
       );
 
+      // Return
+      // amount to send = ETH
+      // total gas fee = ETH
+      // total = ETH
+      // gas fee = gasCost * gasPrice
+      // gasCost = GWEI
+      // gasPrice = WEI
+      // http://ethdocs.org/en/latest/ether.html
+      // https://docs.ethers.io/ethers.js/html/
+      // TRY CATCH...
+
       return result.build(data);
     }
   }
@@ -78,6 +89,7 @@ class EtherTransaction {
         request.gasLimit,
         request.data
       );
+      // RETURN ERROR. KAPAG NAGTRANSFER NA LOW AMOUNt
 
       return result.build(data);
     }

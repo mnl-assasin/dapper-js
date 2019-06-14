@@ -279,11 +279,11 @@ const Contract = require("./contract");
 
 // let createWallet = Wallet.ethers.create();
 
-// Sample for restore
+// // Sample for restore
 // Wallet.ethers
 //   .restore({
 //     mnemonic:
-//       "scrub slam warrior bamboo jacket swing cattle antique toy brand dynamic lunch"
+//       "scrub slam warior bamboo jacket swing cattle antique toy brand dynamic lunch"
 //   })
 //   .then(data => {
 //     console.log(data);
@@ -365,18 +365,18 @@ const Contract = require("./contract");
 //   });
 
 // Sample for Transferring ETH
-var txHash =
-  "0x5a371fe3ded7280a753e7729f13bf4ad7dd4e1366cfa94a2938c17cda560baee";
-Transaction.ethers.status("rinkeby", txHash).then(data => {
-  console.log(data);
-});
+// var txHash =
+//   "0x5a371fe3ded7280a753e7729f13bf4ad7dd4e1366cfa94a2938c17cda560baee";
+// Transaction.ethers.status("rinkeby", txHash).then(data => {
+//   console.log(data);
+// });
 // Transaction.ethers
 //   .send({
 //     network: "rinkeby",
 //     privateKey:
 //       "0x7a7ac95588a98d1203f4781e3aa3fcc3e86c81edd637257b34393e7e602ded36",
 //     address: "0xb437C3F1b2ca60362cC22B42e3E20cBA47Fe2ca7",
-//     value: "0.000025",
+//     value: "50",
 //     gasLimit: "21000"
 //   })
 //   .then(data => {
@@ -388,13 +388,14 @@ Transaction.ethers.status("rinkeby", txHash).then(data => {
 //   });
 
 // TODO: CHRISZER EDIT NETWORK ACCORDING TO YOUR TRXN HASH; DELETE THIS COMMENT THIS AFTER
-// Transaction.ethers
-//   .getStatus({
-//     network: "rinkeby",
-//     transactionHash:
-//       "0x44223f10a9f1225d38d098a21697239b4c99c32739713c15cfa57f1819b8ec30"
-//   })
-//   .then(data => console.log());
+// https://docs.ethers.io/ethers.js/html/migration.html?highlight=gettransactionreceipt
+Transaction.ethers
+  .status({
+    network: "rinkeby",
+    transactionHash:
+      "0x44223f10a9f1225d38d098a21697239b4c99c32739713c15cfa57f1819b8ec30"
+  })
+  .then(data => console.log());
 
 module.exports = {
   Wallet,
