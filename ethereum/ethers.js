@@ -176,7 +176,7 @@ class EthersHelper {
     // ADD CONTRACT DEPLOYMENT HERE
 
     let factory = new ethers.ContractFactory(abi, bytecode, wallet);
-    let contract = await factory.deploy(5);
+    let contract = await factory.deploy(7);
     console.log(contract.address);
     // console.log(contract);
     // console.log(contract.deployTransaction.hash);
@@ -225,6 +225,20 @@ class EthersHelper {
   async status(network, transactionHash) {
     // DO THE LOGIC HERE
     // RETURN THE DATA HERE
+    try {
+      this.getProvider(network)
+        .getTransactionReceipt(transactionHash)
+        .then(receipt => {
+          console.log(receipt);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      // var provider = this.getProvider(network);
+      // provider.getTransactionReceipt(transactionHash);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // DONT ADD FUCNCTION AFTER THIS
