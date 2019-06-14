@@ -84,7 +84,7 @@ class EtherTransaction {
   }
 
   // TODO: CHRISZER ADD TRY CATCH ON ELSE FUNCTION; DELETE THIS COMMENT THIS AFTER
-  async getStatus(request) {
+  async status(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     }
