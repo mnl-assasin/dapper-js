@@ -2,6 +2,7 @@ const ethers = require("./ethers");
 const result = require("../builder/resultBuilder");
 const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
+const validate = require('validate.js');
 
 class EtherTransaction {
   async etherPrice() {
@@ -43,29 +44,43 @@ class EtherTransaction {
   // address not required;
   // notice that estimate fee is the same with different testnets and mainnet
   async estimateFees(request) {
-    console.log(request);
-    if (isUndefined(request)) {
-      throw errors.UNDEFINED;
-    } else {
-      let data = await ethers.estimateFees(
-        request.network,
-        request.address,
-        request.value
-      );
+    const constraints = {
+      network: {
+        presence: {
+          message: 'network not found'
+        },
+      },
+      address: {
+        presence: { 
+          message: 'address not found'
+        },
+      },
+      value: {
+        presence: { 
+          message: 'value not found'
+        }
+      }
+    };
 
-      // Return
-      // amount to send = ETH
-      // total gas fee = ETH
-      // total = ETH
-      // gas fee = gasCost * gasPrice
-      // gasCost = GWEI
-      // gasPrice = WEI
-      // http://ethdocs.org/en/latest/ether.html
-      // https://docs.ethers.io/ethers.js/html/
-      // TRY CATCH...
+    const validationErrors = validate(request, constraints);
 
-      return result.build(data);
+    if (validationErrors) {
+      throw errors.UNPROCESS_ENTITY(validationErrors);
     }
+
+    const { network, address, value } = request;
+
+    const data = await ethers.estimateFees(network, address, value)
+
+    const payload = {
+      gasCost: ethers.parseUnits(data.gasCost, 'gwei'),
+      gasPrice: ethers.stringToBigNumber(data.gasPrice),
+      gasFee: ethers.stringToBigNumber(parseFloat(data.gasCost) * parseFloat(data.gasPrice)),
+      total: ethers.stringToETH(data.estimatedTotalString),
+      amountToSend: ethers.stringToETH(request.value),
+    };
+
+    return result.build(payload);
   }
 
   async send(request) {
@@ -95,17 +110,33 @@ class EtherTransaction {
     }
   }
 
-  // TODO: CHRISZER ADD TRY CATCH ON ELSE FUNCTION; DELETE THIS COMMENT THIS AFTER
   async status(request) {
-    if (isUndefined(request)) {
-      throw errors.UNDEFINED;
+
+    const constraints = {
+      network: {
+        presence: {
+          message: 'network not found'
+        },
+      },
+      transactionHash: {
+        presence: { 
+          message: 'transaction hash not found'
+        },
+      },
+    };
+
+    const validationErrors = validate(request, constraints);
+
+    if (validationErrors) {
+      throw errors.UNPROCESS_ENTITY(validationErrors);
     }
-    if (isUndefined(request.network) || isUndefined(request.transactionHash)) {
-      throw errors.MISSING_PARAMS;
-    } else {
-      let data = await ethers.status(request.network, request.transactionHash);
-      // TODO: ADD TRY CATCH HERE
+
+    try {
+      const data = await ethers.status(request.network, request.transactionHash);
+
       return result.build(data);
+    } catch(e) {
+      throw errors.SOMETHING_WENT_WRONG(e);
     }
   }
 }

@@ -221,24 +221,9 @@ class EthersHelper {
     return data;
   }
 
-  // TODO: CHRISZER ADD LOGIC HERE; DELETE THIS COMMENT THIS AFTER
   async status(network, transactionHash) {
-    // DO THE LOGIC HERE
-    // RETURN THE DATA HERE
-    try {
-      this.getProvider(network)
-        .getTransactionReceipt(transactionHash)
-        .then(receipt => {
-          console.log(receipt);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      // var provider = this.getProvider(network);
-      // provider.getTransactionReceipt(transactionHash);
-    } catch (error) {
-      console.log(error);
-    }
+    return this.getProvider(network)
+            .getTransactionReceipt(transactionHash);
   }
 
   // DONT ADD FUCNCTION AFTER THIS
@@ -263,6 +248,10 @@ class EthersHelper {
       console.log(error);
       throw errors.INVALID_BIG_NUMBER;
     }
+  }
+
+  parseUnits(string, decimalOrUnits) {
+    return utils.parseUnits(string, decimalOrUnits);
   }
 }
 
