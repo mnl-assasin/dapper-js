@@ -389,13 +389,15 @@ const Contract = require("./contract");
 
 // TODO: CHRISZER EDIT NETWORK ACCORDING TO YOUR TRXN HASH; DELETE THIS COMMENT THIS AFTER
 // https://docs.ethers.io/ethers.js/html/migration.html?highlight=gettransactionreceipt
-Transaction.ethers
-  .status({
-    network: "rinkeby",
-    transactionHash:
-      "0x44223f10a9f1225d38d098a21697239b4c99c32739713c15cfa57f1819b8ec30"
-  })
-  .then(data => console.log());
+
+// @TODO: status check
+// Transaction.ethers
+//   .status({
+//     network: "rinkeby",
+//     transactionHash:
+//       "0x44223f10a9f1225d38d098a21697239b4c99c32739713c15cfa57f1819b8ec30"
+//   })
+//   .then(data => console.log());
 
 module.exports = {
   Wallet,

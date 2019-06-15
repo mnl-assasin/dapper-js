@@ -3,8 +3,15 @@ const result = require("../builder/resultBuilder");
 const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
 const validate = require('validate.js');
+const EventEmitter = require('events');
 
 class EtherTransaction {
+  STATUS = {
+    0: 'FAIL',
+    1: 'SUCCESS',
+    2: 'PENDING'
+  };
+
   async etherPrice() {
     let data = await ethers.getEtherPrice();
     return result.build(data);
@@ -84,30 +91,47 @@ class EtherTransaction {
   }
 
   async send(request) {
-    console.log(request);
-    if (isUndefined(request)) {
-      throw errors.UNDEFINED;
-    }
-    if (
-      isUndefined(request.privateKey) ||
-      isUndefined(request.address) ||
-      isUndefined(request.value) ||
-      isUndefined(request.gasLimit)
-    ) {
-      throw errors.MISSING_PARAMS;
-    } else {
-      let data = await ethers.sendTransaction(
-        request.network,
-        request.privateKey,
-        request.address,
-        request.value,
-        request.gasLimit,
-        request.data
-      );
-      // RETURN ERROR. KAPAG NAGTRANSFER NA LOW AMOUNt
 
-      return result.build(data);
+    const constraints = {
+      privateKey: {
+        presence: {
+          message: 'privateKey not found'
+        },
+      },
+      address: {
+        presence: { 
+          message: 'address not found'
+        },
+      },
+      value: {
+        presence: { 
+          message: 'value not found'
+        }
+      },
+      gasLimit: {
+        presence: {
+          message: 'gasLimit not found'
+        }
+      }
+    };
+
+    const validationErrors = validate(request, constraints);
+
+    if (validationErrors) {
+      throw errors.UNPROCESS_ENTITY(validationErrors);
     }
+
+    // no need for try catch here as it will throw an error if something went wrong (insuffecient funds)
+    let data = await ethers.sendTransaction(
+      request.network,
+      request.privateKey,
+      request.address,
+      request.value,
+      request.gasLimit,
+      request.data
+    );
+
+    return result.build(data);
   }
 
   async status(request) {
@@ -132,12 +156,55 @@ class EtherTransaction {
     }
 
     try {
-      const data = await ethers.status(request.network, request.transactionHash);
+      console.log('\n\n\n ============= STATUS', '1st', request);
 
-      return result.build(data);
+      const data = await ethers.status(request.network, request.transactionHash);
+      
+      return result.build({
+        statusCode: data.status,
+        status: this.STATUS[data.status],
+      });
     } catch(e) {
       throw errors.SOMETHING_WENT_WRONG(e);
     }
+  }
+
+  sendAndWatchStatus(request) {
+    const ee = new EventEmitter();
+
+    this.send(request)
+      .then((result) => {
+        const statusRequest = {
+          network: request.network,
+          transactionHash: result.data.hash,
+        };
+        
+        ee.emit('sent', result);
+
+        // const repeatCheckStatus = () => {
+        //   this.status(statusRequest).then((statusResult) => {
+        //     switch(statusResult.data.statusCode) {
+        //       // pending
+        //       case '2':
+        //         ee.emit('pending', statusResult.data);
+        //         return setTimeout(() => {
+        //           return repeatCheckStatus();
+        //         }, 1000);
+        //       case '1':
+        //         ee.emit('success', statusResult.data);
+        //       case '0':
+        //         ee.emit('fail', statusResult.data);
+        //     }
+        //   }).catch(e => ee.emit('error', e));
+        // }
+
+        // repeatCheckStatus();
+      })
+      .catch((e) => {
+        ee.emit('error', e);
+      });
+      
+    return ee;
   }
 }
 
