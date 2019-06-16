@@ -377,7 +377,7 @@ const Contract = require("./contract");
 //     privateKey:
 //       "0x7a7ac95588a98d1203f4781e3aa3fcc3e86c81edd637257b34393e7e602ded36",
 //     address: "0xb437C3F1b2ca60362cC22B42e3E20cBA47Fe2ca7",
-//     value: "50",
+//     value: "1.50",
 //     gasLimit: "21000"
 //   })
 //   .then(data => {

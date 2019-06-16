@@ -166,11 +166,13 @@ class EthersHelper {
       value: this.stringToETH(value)
     };
 
-    const tx = await wallet.sendTransaction(transaction);
+    return await wallet.sendTransaction(transaction);
 
-    const waitTx = await provider.waitForTransaction(tx);
+    // const tx = await wallet.sendTransaction(transaction);
 
-    return provider.getTransactionReceipt(waitTx);
+    // const waitTx = await provider.waitForTransaction(tx);
+
+    // return provider.getTransactionReceipt(waitTx);
   }
 
   getContract(address, abi, wallet) {

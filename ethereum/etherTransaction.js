@@ -100,6 +100,7 @@ class EtherTransaction {
   }
 
   async send(request) {
+    console.log("send! ", request);
     const constraints = {
       privateKey: {
         presence: {
