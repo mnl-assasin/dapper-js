@@ -248,6 +248,7 @@ const Contract = require("./contract");
 //   params: params
 // };
 
+// console.log(request);
 // Contract.ethers
 //   .executeWithParams(request)
 //   .then(data => console.log(data))

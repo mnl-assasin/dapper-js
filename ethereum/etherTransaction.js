@@ -80,6 +80,7 @@ class EtherTransaction {
     const data = await ethers.estimateFees(network, address, value);
 
     const payload = {
+      gasLimit: data.gasCost,
       gasCost: ethers.bigNumberToEther(ethers.parseUnits(data.gasCost, "gwei")),
       gasPrice: ethers.bigNumberToEther(
         ethers.stringToBigNumber(data.gasPrice)
