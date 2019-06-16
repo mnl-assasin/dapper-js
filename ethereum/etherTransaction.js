@@ -2,15 +2,15 @@ const ethers = require("./ethers");
 const result = require("../builder/resultBuilder");
 const errors = require("../builder/errors");
 const isUndefined = require("../util/isUndefined");
-const validate = require('validate.js');
-const EventEmitter = require('events');
+const validate = require("validate.js");
+const EventEmitter = require("events");
 
 class EtherTransaction {
-  STATUS = {
-    0: 'FAIL',
-    1: 'SUCCESS',
-    2: 'PENDING'
-  };
+  // STATUS = {
+  //   0: 'FAIL',
+  //   1: 'SUCCESS',
+  //   2: 'PENDING'
+  // };
 
   async etherPrice() {
     let data = await ethers.getEtherPrice();
@@ -54,17 +54,17 @@ class EtherTransaction {
     const constraints = {
       network: {
         presence: {
-          message: 'network not found'
-        },
+          message: "network not found"
+        }
       },
       address: {
-        presence: { 
-          message: 'address not found'
-        },
+        presence: {
+          message: "address not found"
+        }
       },
       value: {
-        presence: { 
-          message: 'value not found'
+        presence: {
+          message: "value not found"
         }
       }
     };
@@ -77,40 +77,41 @@ class EtherTransaction {
 
     const { network, address, value } = request;
 
-    const data = await ethers.estimateFees(network, address, value)
+    const data = await ethers.estimateFees(network, address, value);
 
     const payload = {
-      gasCost: ethers.parseUnits(data.gasCost, 'gwei'),
+      gasCost: ethers.parseUnits(data.gasCost, "gwei"),
       gasPrice: ethers.stringToBigNumber(data.gasPrice),
-      gasFee: ethers.stringToBigNumber(parseFloat(data.gasCost) * parseFloat(data.gasPrice)),
+      gasFee: ethers.stringToBigNumber(
+        parseFloat(data.gasCost) * parseFloat(data.gasPrice)
+      ),
       total: ethers.stringToETH(data.estimatedTotalString),
-      amountToSend: ethers.stringToETH(request.value),
+      amountToSend: ethers.stringToETH(request.value)
     };
 
     return result.build(payload);
   }
 
   async send(request) {
-
     const constraints = {
       privateKey: {
         presence: {
-          message: 'privateKey not found'
-        },
+          message: "privateKey not found"
+        }
       },
       address: {
-        presence: { 
-          message: 'address not found'
-        },
+        presence: {
+          message: "address not found"
+        }
       },
       value: {
-        presence: { 
-          message: 'value not found'
+        presence: {
+          message: "value not found"
         }
       },
       gasLimit: {
         presence: {
-          message: 'gasLimit not found'
+          message: "gasLimit not found"
         }
       }
     };
@@ -135,18 +136,17 @@ class EtherTransaction {
   }
 
   async status(request) {
-
     const constraints = {
       network: {
         presence: {
-          message: 'network not found'
-        },
+          message: "network not found"
+        }
       },
       transactionHash: {
-        presence: { 
-          message: 'transaction hash not found'
-        },
-      },
+        presence: {
+          message: "transaction hash not found"
+        }
+      }
     };
 
     const validationErrors = validate(request, constraints);
@@ -156,15 +156,18 @@ class EtherTransaction {
     }
 
     try {
-      console.log('\n\n\n ============= STATUS', '1st', request);
+      console.log("\n\n\n ============= STATUS", "1st", request);
 
-      const data = await ethers.status(request.network, request.transactionHash);
-      
+      const data = await ethers.status(
+        request.network,
+        request.transactionHash
+      );
+
       return result.build({
         statusCode: data.status,
-        status: this.STATUS[data.status],
+        status: this.STATUS[data.status]
       });
-    } catch(e) {
+    } catch (e) {
       throw errors.SOMETHING_WENT_WRONG(e);
     }
   }
@@ -173,13 +176,13 @@ class EtherTransaction {
     const ee = new EventEmitter();
 
     this.send(request)
-      .then((result) => {
+      .then(result => {
         const statusRequest = {
           network: request.network,
-          transactionHash: result.data.hash,
+          transactionHash: result.data.hash
         };
-        
-        ee.emit('sent', result);
+
+        ee.emit("sent", result);
 
         // const repeatCheckStatus = () => {
         //   this.status(statusRequest).then((statusResult) => {
@@ -200,10 +203,10 @@ class EtherTransaction {
 
         // repeatCheckStatus();
       })
-      .catch((e) => {
-        ee.emit('error', e);
+      .catch(e => {
+        ee.emit("error", e);
       });
-      
+
     return ee;
   }
 }

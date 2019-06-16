@@ -158,7 +158,7 @@ class EthersHelper {
     const provider = this.getProvider(network);
 
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
-    
+
     let transaction = {
       gasLimit: this.stringToBigNumber(gasLimit),
       to: address,
@@ -167,9 +167,9 @@ class EthersHelper {
     };
 
     const tx = await wallet.sendTransaction(transaction);
-    
+
     const waitTx = await provider.waitForTransaction(tx);
-    
+
     return provider.getTransactionReceipt(waitTx);
   }
 
@@ -229,8 +229,7 @@ class EthersHelper {
   }
 
   async status(network, transactionHash) {
-    return this.getProvider(network)
-            .getTransactionReceipt(transactionHash);
+    return this.getProvider(network).getTransactionReceipt(transactionHash);
   }
 
   // DONT ADD FUCNCTION AFTER THIS
