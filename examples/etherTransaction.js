@@ -1,13 +1,15 @@
 const etherTransactions = require("../ethereum/etherTransaction");
 
 const estimatesFeesSuccess = async () => {
+  console.log("estimateFeesSuccess");
   const request = {
     network: "kovan",
     address: "0x99bf3180c1ffaf070c34326cded67aba23ff409f",
     value: "1000000"
   };
 
-  await etherTransactions.estimateFees(request);
+  var data = await etherTransactions.estimateFees(request);
+  console.log(data);
 };
 
 const estimatesFeesFail = async () => {
