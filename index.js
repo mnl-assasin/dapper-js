@@ -281,18 +281,18 @@ const Contract = require("./contract");
 // let createWallet = Wallet.ethers.create();
 
 // // Sample for restore
-// Wallet.ethers
-//   .restore({
-//     mnemonic:
-//       "scrub slam warior bamboo jacket swing cattle antique toy brand dynamic lunch"
-//   })
-//   .then(data => {
-//     console.log(data);
-//   })
-//   .catch(error => {
-//     console.log("Index catch: ");
-//     console.log(error);
-//   });
+Wallet.ethers
+  .restore({
+    mnemonic:
+      "scrub slam warrior bamboo jacket swing cattle antique toy brand dynamic lunch"
+  })
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.log("Index catch: ");
+    console.log(error);
+  });
 
 // Sample for balance
 // Wallet.ethers

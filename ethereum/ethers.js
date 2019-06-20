@@ -203,16 +203,56 @@ class EthersHelper {
     return data;
   }
 
+  async executeNoParamsPayable(
+    privateKey,
+    network,
+    address,
+    abi,
+    method,
+    value
+  ) {
+    let overrides = {
+      value: this.stringToBigNumber(value)
+    };
+
+    let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method](overrides);
+    let data = {
+      result: result.toString()
+    };
+    return data;
+  }
+
   async executeWithParams(privateKey, network, address, abi, method, params) {
     let wallet = new Wallet(privateKey, this.getProvider(network));
 
-    // let parameters = [];
-    // let jsonObject = JSON.parse(params);
-    // for (var key in jsonObject) {
-    //   parameters.push(jsonObject[key]);
-    // }
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params);
+    let data = {
+      result: result
+    };
+
+    return data;
+  }
+
+  async executeWithParamsPayable(
+    privateKey,
+    network,
+    address,
+    abi,
+    method,
+    params,
+    value
+  ) {
+    let overrides = {
+      value: this.stringToBigNumber(value)
+    };
+
+    let wallet = new Wallet(privateKey, this.getProvider(network));
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method](...params, overrides);
     let data = {
       result: result
     };
