@@ -249,7 +249,7 @@ class EthersHelper {
     let overrides = {
       value: this.stringToBigNumber(value)
     };
-
+    console.log("executeWithParamsPayable: overrides=", overrides);
     let wallet = new Wallet(privateKey, this.getProvider(network));
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params, overrides);

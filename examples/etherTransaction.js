@@ -392,4 +392,4 @@ const run = () => {
   // sendTransactionWatch();
 };
 
-run();
+// run();
