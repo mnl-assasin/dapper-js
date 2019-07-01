@@ -231,7 +231,7 @@ class EthersHelper {
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params);
     let data = {
-      result: result
+      result: result.toString()
     };
 
     return data;

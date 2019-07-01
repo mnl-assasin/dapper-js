@@ -337,10 +337,10 @@ const payable2Params = async () => {
 
 const run = () => {
   console.log("run etherContract");
-  name();
-  age();
+  // name();
+  // age();
   //   isEmployed();
-  //   nonPayable1Param();
+  nonPayable1Param();
   //   nonPayable2Params();
   //   nonPayable3Params();
   //   payableNoParam();
