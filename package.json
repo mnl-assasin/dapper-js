@@ -8,7 +8,8 @@
     "start": "./node_modules/.bin/nodemon index.js",
     "example": "./node_modules/.bin/nodemon examples/etherTransaction.js",
     "contract": "./node_modules/.bin/nodemon examples/etherContract.js",
-    "appUpdateChecker": "./node_modules/.bin/nodemon examples/appUpdateChecker.js"
+    "appUpdateChecker": "./node_modules/.bin/nodemon examples/appUpdateChecker.js",
+    "deployContract": "./node_modules/.bin/nodemon examples/deployContract.js"
   },
   "author": "",
   "license": "ISC",

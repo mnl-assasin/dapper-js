@@ -19,12 +19,14 @@ class EtherContract {
     ) {
       throw errors.MISSING_PARAMS;
     } else {
-      ethers.deployContract(
+      let data = await ethers.deployContract(
         request.privateKey,
         request.network,
         request.abi,
         request.bytecode
       );
+
+      return result.build(data);
     }
   }
 

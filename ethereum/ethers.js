@@ -181,15 +181,11 @@ class EthersHelper {
 
   async deployContract(privateKey, network, abi, bytecode) {
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
-
-    // ADD CONTRACT DEPLOYMENT HERE
-
     let factory = new ethers.ContractFactory(abi, bytecode, wallet);
     let contract = await factory.deploy(7);
-    console.log(contract.address);
-    // console.log(contract);
-    // console.log(contract.deployTransaction.hash);
     await contract.deployed();
+
+    return { address: contract.address };
   }
 
   async executeNoParams(privateKey, network, address, abi, method) {
