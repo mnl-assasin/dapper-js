@@ -188,6 +188,20 @@ class EthersHelper {
     return { address: contract.address };
   }
 
+  async deployContractWithParams(privateKey, network, abi, bytecode, params) {
+    try {
+      let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+      let factory = new ethers.ContractFactory(abi, bytecode, wallet);
+      let contract = await factory.deploy(...params);
+      await contract.deployed();
+
+      return { address: contract.address };
+    } catch (error) {
+      console.log("Something went wrong");
+      console.log(error);
+    }
+  }
+
   async executeNoParams(privateKey, network, address, abi, method) {
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
 

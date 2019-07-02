@@ -30,6 +30,31 @@ class EtherContract {
     }
   }
 
+  async deployContractWithParams(request) {
+    console.log("etherContract: deployContractWithParams");
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else if (
+      isUndefined(request.privateKey) ||
+      isUndefined(request.network) ||
+      isUndefined(request.abi) ||
+      isUndefined(request.bytecode) ||
+      isUndefined(request.params)
+    ) {
+      throw errors.MISSING_PARAMS;
+    } else {
+      let data = await ethers.deployContractWithParams(
+        request.privateKey,
+        request.network,
+        request.abi,
+        request.bytecode,
+        request.params
+      );
+
+      return result.build(data);
+    }
+  }
+
   async executeNoParams(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
