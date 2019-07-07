@@ -122,7 +122,7 @@ const contract2 = async () => {
 };
 
 const contract3 = async () => {
-  console.log("contract2");
+  console.log("contract3");
   const abi = [
     {
       constant: true,

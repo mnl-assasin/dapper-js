@@ -112,7 +112,7 @@ class EthersHelper {
     try {
       let transaction = {
         to: address,
-        value: value
+        value: this.parseUnits(value.amount, value.unit)
       };
 
       let estimatedGas = await this.getProvider(network).estimateGas(
@@ -133,21 +133,21 @@ class EthersHelper {
       let provider = this.getProvider(network);
       let transaction = {
         to: address,
-        value: this.stringToETH(value)
+        value: value
       };
       let gasCost = await provider.estimateGas(transaction);
       let gasPrice = await provider.getGasPrice(network);
       let fee = gasCost.mul(gasPrice);
-      let total = this.stringToETH(value).add(fee);
+      let total = value.add(fee);
 
       let data = {
-        gasCost: gasCost.toString(),
-        gasPrice: gasPrice.toString(),
-        estimatedFeeString: utils.formatEther(fee),
-        estimatedFee: parseFloat(utils.formatEther(fee)),
-        estimatedTotalString: utils.formatEther(total),
-        estimatedTotal: parseFloat(utils.formatEther(total))
+        gasCost,
+        gasPrice,
+        fee,
+        total
       };
+
+      console.log(data);
       return data;
     } catch (error) {
       console.log(error);
@@ -308,8 +308,20 @@ class EthersHelper {
     }
   }
 
-  parseUnits(string, decimalOrUnits) {
-    return utils.parseUnits(string, decimalOrUnits);
+  parseEther(value) {
+    return utils.parseUnits(string, "ether");
+  }
+
+  parseUnits(value, decimalOrUnits) {
+    return utils.parseUnits(value.toString(), decimalOrUnits);
+  }
+
+  weiToEther(value) {
+    return this.bigNumberToEther(this.parseUnits(value.toString(), "wei"));
+  }
+
+  gweiToEther(value) {
+    return this.bigNumberToEther(this.parseUnits(value.toString(), "gwei"));
   }
 }
 

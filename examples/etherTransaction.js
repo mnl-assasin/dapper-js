@@ -1,263 +1,20 @@
 const etherTransactions = require("../ethereum/etherTransaction");
 const etherContract = require("../ethereum/etherContract");
 
-const privateKey =
-  "0x7a7ac95588a98d1203f4781e3aa3fcc3e86c81edd637257b34393e7e602ded36";
-const network = "ropsten";
-const contractAddress = "0x7c23d29c8c75f47f4e5565f2dd136df73dda4164";
-const abi = [
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      },
-      {
-        name: "_age",
-        type: "uint256"
-      }
-    ],
-    name: "doubleParam",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      },
-      {
-        name: "_age",
-        type: "uint256"
-      }
-    ],
-    name: "doubleParamPayable",
-    outputs: [],
-    payable: true,
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [],
-    name: "payableNoParam",
-    outputs: [],
-    payable: true,
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      }
-    ],
-    name: "singleParam",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      }
-    ],
-    name: "singleParamPayable",
-    outputs: [],
-    payable: true,
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      },
-      {
-        name: "_age",
-        type: "uint256"
-      },
-      {
-        name: "_employed",
-        type: "bool"
-      }
-    ],
-    name: "tripleParam",
-    outputs: [],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      },
-      {
-        name: "_age",
-        type: "uint256"
-      },
-      {
-        name: "_employed",
-        type: "bool"
-      }
-    ],
-    name: "tripleParamPayable",
-    outputs: [],
-    payable: true,
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        name: "_name",
-        type: "string"
-      },
-      {
-        name: "_age",
-        type: "uint256"
-      },
-      {
-        name: "_employed",
-        type: "bool"
-      }
-    ],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "constructor"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "age",
-    outputs: [
-      {
-        name: "",
-        type: "uint256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        name: "",
-        type: "string"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  }
-];
-
-const getName = async () => {
-  const request = {
-    privateKey,
-    network,
-    address: contractAddress,
-    abi,
-    method: "name"
-  };
-
-  etherContract.executeNoParams(request).then(data => console.log(data));
-};
-
-const getAge = async () => {
-  const request = {
-    privateKey,
-    network,
-    address: contractAddress,
-    abi,
-    method: "age"
-  };
-
-  etherContract.executeNoParams(request).then(data => console.log(data));
-};
-
-const singleParam = async () => {
-  console.log("singleParam");
-  const request = {
-    privateKey,
-    network,
-    address: contractAddress,
-    abi,
-    method: "singleParam",
-    params: ["Mykel Neds"]
-  };
-
-  etherContract
-    .executeWithParams(request)
-    .then(data => console.log(data))
-    .catch(error => console.log(error));
-};
-
-const singleParamPayable = async () => {
-  console.log("singleParamPayable");
-  const request = {
-    privateKey,
-    network,
-    address: contractAddress,
-    abi,
-    method: "singleParamPayable",
-    params: ["Mykel Neds Leano"],
-    value: "1"
-  };
-
-  etherContract
-    .executeWithParamsPayable(request)
-    .then(data => console.log(data))
-    .catch(error => console.log(error));
-};
-
-const payableNoParam = async () => {
-  console.log("payableNoParam");
-  const request = {
-    privateKey,
-    network,
-    address: contractAddress,
-    abi,
-    method: "payableNoParam",
-    value: "10"
-  };
-
-  etherContract
-    .executeNoParamsPayable(request)
-    .then(data => console.log(data))
-    .catch(error => console.log(error));
-};
-
 const estimatesFeesSuccess = async () => {
   console.log("estimateFeesSuccess");
   const request = {
     network: "kovan",
     address: "0x99bf3180c1ffaf070c34326cded67aba23ff409f",
-    value: "1000000"
+    value: { amount: "1", unit: "gwei" }
   };
 
-  var data = await etherTransactions.estimateFees(request);
-  console.log(data);
+  try {
+    var data = await etherTransactions.estimateFees(request);
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const estimatesFeesFail = async () => {
@@ -378,12 +135,7 @@ const sendTransactionWatch = async () => {
 };
 
 const run = () => {
-  // getName();
-  getAge();
-  // payableNoParam();
-  // singleParam();
-  // singleParamPayable();
-  // estimatesFeesSuccess();
+  estimatesFeesSuccess();
   // estimatesFeesFail();
   // transactionStatusSuccess();
   // transactionStatusFail();
@@ -392,4 +144,4 @@ const run = () => {
   // sendTransactionWatch();
 };
 
-// run();
+run();

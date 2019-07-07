@@ -77,25 +77,30 @@ class EtherTransaction {
 
     const { network, address, value } = request;
 
-    const data = await ethers.estimateFees(network, address, value);
+    const data = await ethers.estimateFees(
+      network,
+      address,
+      ethers.parseUnits(value.amount, value.unit)
+    );
 
     const payload = {
-      gasLimit: data.gasCost,
-      gasCost: ethers.bigNumberToEther(ethers.parseUnits(data.gasCost, "gwei")),
-      gasPrice: ethers.bigNumberToEther(
-        ethers.stringToBigNumber(data.gasPrice)
-      ),
-      gasFee: ethers.bigNumberToEther(
-        ethers.stringToBigNumber(
-          parseFloat(data.gasCost) * parseFloat(data.gasPrice)
-        )
-      ),
-      total: ethers.bigNumberToEther(
-        ethers.stringToETH(data.estimatedTotalString)
-      ),
-      amountToSend: ethers.bigNumberToEther(ethers.stringToETH(request.value))
+      gasLimit: data.gasCost.toString(),
+      gasCost: ethers.gweiToEther(data.gasCost),
+      gasPrice: ethers.weiToEther(data.gasPrice),
+      gasFee: ethers.weiToEther(data.fee),
+      total: ethers.weiToEther(data.total)
     };
-
+    // gasPrice: ethers.bigNumberToEther(
+    //   ethers.stringToBigNumber(data.gasPrice)
+    // ),
+    // gasFee: ethers.bigNumberToEther(
+    //   ethers.stringToBigNumber(
+    //     parseFloat(data.gasCost) * parseFloat(data.gasPrice)
+    //   )
+    // ),
+    // total: ethers.bigNumberToEther(
+    //   ethers.stringToETH(data.estimatedTotalString)
+    // )
     return result.build(payload);
   }
 
