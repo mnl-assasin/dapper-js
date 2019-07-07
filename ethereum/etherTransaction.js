@@ -33,7 +33,7 @@ class EtherTransaction {
       let data = await ethers.estimateGas(
         request.network,
         request.address,
-        request.value
+        ethers.parseUnits(request.value.amount, value.unit)
       );
       return result.build(data);
     }
@@ -90,17 +90,7 @@ class EtherTransaction {
       gasFee: ethers.weiToEther(data.fee),
       total: ethers.weiToEther(data.total)
     };
-    // gasPrice: ethers.bigNumberToEther(
-    //   ethers.stringToBigNumber(data.gasPrice)
-    // ),
-    // gasFee: ethers.bigNumberToEther(
-    //   ethers.stringToBigNumber(
-    //     parseFloat(data.gasCost) * parseFloat(data.gasPrice)
-    //   )
-    // ),
-    // total: ethers.bigNumberToEther(
-    //   ethers.stringToETH(data.estimatedTotalString)
-    // )
+
     return result.build(payload);
   }
 
@@ -140,7 +130,7 @@ class EtherTransaction {
       request.network,
       request.privateKey,
       request.address,
-      request.value,
+      ethers.parseUnits(request.value.amount, value.unit),
       request.gasLimit,
       request.data
     );

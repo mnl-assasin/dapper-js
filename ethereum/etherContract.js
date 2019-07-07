@@ -97,7 +97,7 @@ class EtherContract {
         request.address,
         request.abi,
         request.method,
-        request.value
+        ethers.parseUnits(request.value.amount, value.unit)
       );
       return result.build(data);
     }
@@ -149,7 +149,7 @@ class EtherContract {
         request.abi,
         request.method,
         request.params,
-        request.value
+        ethers.parseUnits(request.value.amount, value.unit)
       );
       return result.build(data);
     }
