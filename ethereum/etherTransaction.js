@@ -30,10 +30,18 @@ class EtherTransaction {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     } else {
+      const {
+        network,
+        address,
+        value: {
+          amount,
+          unit
+        }
+      } = request;
       let data = await ethers.estimateGas(
-        request.network,
-        request.address,
-        ethers.parseUnits(request.value.amount, value.unit)
+        network,
+        address,
+        ethers.parseUnits(amount, unit)
       );
       return result.build(data);
     }
@@ -75,20 +83,33 @@ class EtherTransaction {
       throw errors.UNPROCESS_ENTITY(validationErrors);
     }
 
-    const { network, address, value } = request;
+    const {
+      network,
+      address,
+      value: {
+        amount,
+        unit
+      }
+    } = request;
 
     const data = await ethers.estimateFees(
       network,
       address,
-      ethers.parseUnits(value.amount, value.unit)
+      ethers.parseUnits(amount, unit)
     );
+    const {
+      gasCost,
+      gasPrice,
+      fee,
+      total
+    } = data;
 
     const payload = {
-      gasLimit: data.gasCost.toString(),
-      gasCost: ethers.gweiToEther(data.gasCost),
-      gasPrice: ethers.weiToEther(data.gasPrice),
-      gasFee: ethers.weiToEther(data.fee),
-      total: ethers.weiToEther(data.total)
+      gasLimit: gasCost.toString(),
+      gasCost: ethers.gweiToEther(gasCost),
+      gasPrice: ethers.weiToEther(gasPrice),
+      gasFee: ethers.weiToEther(fee),
+      total: ethers.weiToEther(total)
     };
 
     return result.build(payload);
@@ -126,13 +147,23 @@ class EtherTransaction {
     }
 
     // no need for try catch here as it will throw an error if something went wrong (insuffecient funds)
+    const {
+      network,
+      privateKey,
+      address,
+      gasLimit,
+      data: requestData,
+      value: {
+        amount,
+        unit
+      }
+    } = request;
     let data = await ethers.sendTransaction(
-      request.network,
-      request.privateKey,
-      request.address,
-      ethers.parseUnits(request.value.amount, value.unit),
-      request.gasLimit,
-      request.data
+      network,
+      privateKey,
+      address,
+      ethers.parseUnits(amount, unit),
+      gasLimit, requestData
     );
 
     return result.build(data);

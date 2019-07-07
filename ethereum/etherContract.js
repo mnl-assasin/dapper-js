@@ -91,13 +91,24 @@ class EtherContract {
     ) {
       throw errors.MISSING_PARAMS;
     } else {
+      const {
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        value: {
+          amount,
+          unit
+        }
+      } = request;
       let data = await ethers.executeNoParamsPayable(
-        request.privateKey,
-        request.network,
-        request.address,
-        request.abi,
-        request.method,
-        ethers.parseUnits(request.value.amount, value.unit)
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        ethers.parseUnits(amount, unit)
       );
       return result.build(data);
     }
@@ -116,13 +127,21 @@ class EtherContract {
     ) {
       throw errors.MISSING_PARAMS;
     } else {
+      const {
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params
+      } = request;
       let data = await ethers.executeWithParams(
-        request.privateKey,
-        request.network,
-        request.address,
-        request.abi,
-        request.method,
-        request.params
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params
       );
       return result.build(data);
     }
@@ -142,14 +161,26 @@ class EtherContract {
     ) {
       throw errors.MISSING_PARAMS;
     } else {
+      const {
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params,
+        value: {
+          amount,
+          unit
+        }
+      } = request;
       let data = await ethers.executeWithParamsPayable(
-        request.privateKey,
-        request.network,
-        request.address,
-        request.abi,
-        request.method,
-        request.params,
-        ethers.parseUnits(request.value.amount, value.unit)
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params,
+        ethers.parseUnits(amount, unit)
       );
       return result.build(data);
     }
