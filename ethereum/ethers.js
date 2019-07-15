@@ -112,7 +112,7 @@ class EthersHelper {
     try {
       let transaction = {
         to: address,
-        value: value
+        value: this.parseUnits(value.amount, value.unit)
       };
 
       let estimatedGas = await this.getProvider(network).estimateGas(
@@ -133,21 +133,21 @@ class EthersHelper {
       let provider = this.getProvider(network);
       let transaction = {
         to: address,
-        value: this.stringToETH(value)
+        value: value
       };
       let gasCost = await provider.estimateGas(transaction);
       let gasPrice = await provider.getGasPrice(network);
       let fee = gasCost.mul(gasPrice);
-      let total = this.stringToETH(value).add(fee);
+      let total = value.add(fee);
 
       let data = {
-        gasCost: gasCost.toString(),
-        gasPrice: gasPrice.toString(),
-        estimatedFeeString: utils.formatEther(fee),
-        estimatedFee: parseFloat(utils.formatEther(fee)),
-        estimatedTotalString: utils.formatEther(total),
-        estimatedTotal: parseFloat(utils.formatEther(total))
+        gasCost,
+        gasPrice,
+        fee,
+        total
       };
+
+      console.log(data);
       return data;
     } catch (error) {
       console.log(error);
@@ -155,7 +155,10 @@ class EthersHelper {
   }
 
   async sendTransaction(network, privateKey, address, value, gasLimit, data) {
+    const provider = this.getProvider(network);
+
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+
     let transaction = {
       gasLimit: this.stringToBigNumber(gasLimit),
       to: address,
@@ -164,6 +167,12 @@ class EthersHelper {
     };
 
     return await wallet.sendTransaction(transaction);
+
+    // const tx = await wallet.sendTransaction(transaction);
+
+    // const waitTx = await provider.waitForTransaction(tx);
+
+    // return provider.getTransactionReceipt(waitTx);
   }
 
   getContract(address, abi, wallet) {
@@ -172,15 +181,25 @@ class EthersHelper {
 
   async deployContract(privateKey, network, abi, bytecode) {
     let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
-
-    // ADD CONTRACT DEPLOYMENT HERE
-
     let factory = new ethers.ContractFactory(abi, bytecode, wallet);
     let contract = await factory.deploy(7);
-    console.log(contract.address);
-    // console.log(contract);
-    // console.log(contract.deployTransaction.hash);
     await contract.deployed();
+
+    return { address: contract.address };
+  }
+
+  async deployContractWithParams(privateKey, network, abi, bytecode, params) {
+    try {
+      let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+      let factory = new ethers.ContractFactory(abi, bytecode, wallet);
+      let contract = await factory.deploy(...params);
+      await contract.deployed();
+
+      return { address: contract.address };
+    } catch (error) {
+      console.log("Something went wrong");
+      console.log(error);
+    }
   }
 
   async executeNoParams(privateKey, network, address, abi, method) {
@@ -194,16 +213,56 @@ class EthersHelper {
     return data;
   }
 
+  async executeNoParamsPayable(
+    privateKey,
+    network,
+    address,
+    abi,
+    method,
+    value
+  ) {
+    let overrides = {
+      value: this.stringToBigNumber(value)
+    };
+
+    let wallet = new ethers.Wallet(privateKey, this.getProvider(network));
+
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method](overrides);
+    let data = {
+      result: result.toString()
+    };
+    return data;
+  }
+
   async executeWithParams(privateKey, network, address, abi, method, params) {
     let wallet = new Wallet(privateKey, this.getProvider(network));
 
-    // let parameters = [];
-    // let jsonObject = JSON.parse(params);
-    // for (var key in jsonObject) {
-    //   parameters.push(jsonObject[key]);
-    // }
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params);
+    let data = {
+      result: result.toString()
+    };
+
+    return data;
+  }
+
+  async executeWithParamsPayable(
+    privateKey,
+    network,
+    address,
+    abi,
+    method,
+    params,
+    value
+  ) {
+    let overrides = {
+      value: this.stringToBigNumber(value)
+    };
+    console.log("executeWithParamsPayable: overrides=", overrides);
+    let wallet = new Wallet(privateKey, this.getProvider(network));
+    let contract = this.getContract(address, abi, wallet);
+    let result = await contract[method](...params, overrides);
     let data = {
       result: result
     };
@@ -221,24 +280,8 @@ class EthersHelper {
     return data;
   }
 
-  // TODO: CHRISZER ADD LOGIC HERE; DELETE THIS COMMENT THIS AFTER
   async status(network, transactionHash) {
-    // DO THE LOGIC HERE
-    // RETURN THE DATA HERE
-    try {
-      this.getProvider(network)
-        .getTransactionReceipt(transactionHash)
-        .then(receipt => {
-          console.log(receipt);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      // var provider = this.getProvider(network);
-      // provider.getTransactionReceipt(transactionHash);
-    } catch (error) {
-      console.log(error);
-    }
+    return this.getProvider(network).getTransactionReceipt(transactionHash);
   }
 
   // DONT ADD FUCNCTION AFTER THIS
@@ -263,6 +306,22 @@ class EthersHelper {
       console.log(error);
       throw errors.INVALID_BIG_NUMBER;
     }
+  }
+
+  parseEther(value) {
+    return utils.parseUnits(string, "ether");
+  }
+
+  parseUnits(value, decimalOrUnits) {
+    return utils.parseUnits(value.toString(), decimalOrUnits);
+  }
+
+  weiToEther(value) {
+    return this.bigNumberToEther(this.parseUnits(value.toString(), "wei"));
+  }
+
+  gweiToEther(value) {
+    return this.bigNumberToEther(this.parseUnits(value.toString(), "gwei"));
   }
 }
 

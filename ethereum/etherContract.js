@@ -19,12 +19,39 @@ class EtherContract {
     ) {
       throw errors.MISSING_PARAMS;
     } else {
-      ethers.deployContract(
+      let data = await ethers.deployContract(
         request.privateKey,
         request.network,
         request.abi,
         request.bytecode
       );
+
+      return result.build(data);
+    }
+  }
+
+  async deployContractWithParams(request) {
+    console.log("etherContract: deployContractWithParams");
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else if (
+      isUndefined(request.privateKey) ||
+      isUndefined(request.network) ||
+      isUndefined(request.abi) ||
+      isUndefined(request.bytecode) ||
+      isUndefined(request.params)
+    ) {
+      throw errors.MISSING_PARAMS;
+    } else {
+      let data = await ethers.deployContractWithParams(
+        request.privateKey,
+        request.network,
+        request.abi,
+        request.bytecode,
+        request.params
+      );
+
+      return result.build(data);
     }
   }
 
@@ -51,6 +78,42 @@ class EtherContract {
     }
   }
 
+  async executeNoParamsPayable(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else if (
+      isUndefined(request.privateKey) ||
+      isUndefined(request.network) ||
+      isUndefined(request.address) ||
+      isUndefined(request.abi) ||
+      isUndefined(request.method) ||
+      isUndefined(request.value)
+    ) {
+      throw errors.MISSING_PARAMS;
+    } else {
+      const {
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        value: {
+          amount,
+          unit
+        }
+      } = request;
+      let data = await ethers.executeNoParamsPayable(
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        ethers.parseUnits(amount, unit)
+      );
+      return result.build(data);
+    }
+  }
+
   async executeWithParams(request) {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
@@ -64,31 +127,63 @@ class EtherContract {
     ) {
       throw errors.MISSING_PARAMS;
     } else {
+      const {
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params
+      } = request;
       let data = await ethers.executeWithParams(
-        request.privateKey,
-        request.network,
-        request.address,
-        request.abi,
-        request.method,
-        request.params
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params
       );
       return result.build(data);
     }
-    // let provider = ethers.providers.getDefaultProvider(network);
-    // let wallet = new Wallet(privateKey, provider);
+  }
 
-    // let parameters = [];
-    // let jsonObject = JSON.parse(params);
-    // for (var key in jsonObject) {
-    //   parameters.push(jsonObject[key]);
-    // }
-    // let contract = this.getContract(address, abi, wallet);
-    // let result = await contract[method](...parameters);
-    // let data = {
-    //   result: result.toString()
-    // };
-
-    // return data;
+  async executeWithParamsPayable(request) {
+    if (isUndefined(request)) {
+      throw errors.UNDEFINED;
+    } else if (
+      isUndefined(request.privateKey) ||
+      isUndefined(request.network) ||
+      isUndefined(request.address) ||
+      isUndefined(request.abi) ||
+      isUndefined(request.method) ||
+      isUndefined(request.params) ||
+      isUndefined(request.value)
+    ) {
+      throw errors.MISSING_PARAMS;
+    } else {
+      const {
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params,
+        value: {
+          amount,
+          unit
+        }
+      } = request;
+      let data = await ethers.executeWithParamsPayable(
+        privateKey,
+        network,
+        address,
+        abi,
+        method,
+        params,
+        ethers.parseUnits(amount, unit)
+      );
+      return result.build(data);
+    }
   }
 
   async execute(privateKey, network, address, abi, method, payload) {
