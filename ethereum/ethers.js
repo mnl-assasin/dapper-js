@@ -257,7 +257,7 @@ class EthersHelper {
     value
   ) {
     let overrides = {
-      value: this.stringToBigNumber(value)
+      value
     };
     console.log("executeWithParamsPayable: overrides=", overrides);
     let wallet = new Wallet(privateKey, this.getProvider(network));

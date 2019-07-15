@@ -3,7 +3,7 @@ const etherContract = require("../ethereum/etherContract");
 const privateKey =
   "0x7a7ac95588a98d1203f4781e3aa3fcc3e86c81edd637257b34393e7e602ded36";
 const network = "ropsten";
-const address = "0x25f26924f7a29edef80d404e8ce9abebf7079202";
+const address = "0xfaf636d0748f31de67d835b049262f9575052b3d";
 const abi = [
   {
     constant: false,
@@ -179,7 +179,41 @@ const getAppVersion = async () => {
     address,
     abi,
     method: "getAppVersion",
-    params: ["com.dapperwallet.dapperwallet"]
+    params: ["com.dapperwallet.dce"]
+  };
+
+  etherContract
+    .executeWithParams(request)
+    .then(data => console.log(data))
+    .catch(error => console.log(error));
+};
+
+const updateAppVersion = async (versionCode, isUpdateRequired) => {
+  const request = {
+    privateKey,
+    network,
+    address,
+    abi,
+    method: "updateApp",
+    params: ["com.dapperwallet.dce", versionCode, isUpdateRequired],
+    value: { amount: 5, unit: "wei" }
+  };
+
+  etherContract
+    .executeWithParamsPayable(request)
+    .then(data => console.log(data))
+    .catch(error => console.log(error));
+};
+
+const isUpdateRequired = async versionCode => {
+  const request = {
+    privateKey,
+    network,
+    address,
+    abi,
+    method: "isUpdateRequired",
+    params: ["com.dapperwallet.dce", versionCode],
+    value: { amount: 5, unit: "wei" }
   };
 
   etherContract
@@ -204,16 +238,18 @@ const contractValue = async () => {
 };
 
 const run = () => {
-  console.log("run appUpdateChecker");
-  getAppVersion();
-  contractValue();
-  //   isEmployed();
-  //   nonPayable1Param();
-  //   nonPayable2Params();
-  //   nonPayable3Params();
-  //   payableNoParam();
-  //   payable1Param();
-  //   payable2Params();
+  // RETURNS Current the version of the Dapper Chrome Extension in the Blockchain
+  // uncomment line below
+  // getAppVersion();
+  // versionCode: Any positive integer
+  // isUpdateRequired: True / False, determine wether update is required or not
+  // uncomment line below
+  // updateAppVersion(5, false);
+  // RETURNS
+  // if True all app with versionCode lower than saved on the blockchain will needs to update
+  // if False all app with versionCode lower than saved on the blockchain will recommend to update
+  // uncomment line below
+  // isUpdateRequired(1);
 };
 
 run();

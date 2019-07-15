@@ -40,12 +40,6 @@ let MISSING_PARAMS = errorBuilder.build(
   "MISSING PARAMETERS",
   "The supplied number of parameters does not match the function"
 );
-
-const UNPROCESS_ENTITY = entities =>
-  errorBuilder.build(444, "UNPROCESS ENTITY", entities);
-const SOMETHING_WENT_WRONG = error =>
-  errorBuilder.build(500, "SOMETHING WENT WRONG", error);
-
 module.exports = {
   UNDEFINED,
   INVALID_MNEMONIC,
@@ -53,7 +47,5 @@ module.exports = {
   INVALID_ADDRESS,
   INVALID_ETH_VALUE,
   INVALID_BIG_NUMBER,
-  MISSING_PARAMS,
-  UNPROCESS_ENTITY,
-  SOMETHING_WENT_WRONG
+  MISSING_PARAMS
 };
