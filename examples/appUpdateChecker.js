@@ -238,18 +238,16 @@ const contractValue = async () => {
 };
 
 const run = () => {
-  // RETURNS Current the version of the Dapper Chrome Extension in the Blockchain
-  // uncomment line below
   // getAppVersion();
-  // versionCode: Any positive integer
-  // isUpdateRequired: True / False, determine wether update is required or not
-  // uncomment line below
-  // updateAppVersion(5, false);
-  // RETURNS
-  // if True all app with versionCode lower than saved on the blockchain will needs to update
-  // if False all app with versionCode lower than saved on the blockchain will recommend to update
-  // uncomment line below
-  // isUpdateRequired(1);
+
+  // RESULT UP TO DATE
+  // updateAppVersion(1, false);
+  // RESULT UPDATE RECOMMENDED
+  // updateAppVersion(2, false);
+  // RESULT UPDATE REQUIRED
+  // updateAppVersion(2, true);
+
+  isUpdateRequired(1);
 };
 
 run();
