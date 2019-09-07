@@ -1,8 +1,11 @@
-const ethers = require("ethers");
-const errors = require("../builder/errors");
+const ethers = require('ethers');
+const errors = require('../builder/errors');
 const Wallet = ethers.Wallet;
 const utils = ethers.utils;
-const providers = ethers.providers;
+// const providers = ethers.providers;
+const { getTransactions } = require('../util/etherscan-api');
+
+const etherscanAPI = require('etherscan-api').init('');
 
 class EthersHelper {
   createWallet(wallet, path) {
@@ -72,16 +75,44 @@ class EthersHelper {
     };
   }
 
-  async getHistory(network, address) {
+  // async getHistory(network, address) {
+  //   try {
+  //     let provider = new ethers.providers.EtherscanProvider(network);
+  //     let transactions = await provider.getHistory(address, 0, 99999999);
+  //     transactions.map((val, key) => {
+  //       let { gasPrice, gasLimit, value } = val;
+  //       val.gasPrice = gasPrice.toString();
+  //       val.gasLimit = gasLimit.toString();
+  //       val.value = this.bigNumberToEther(value);
+  //       return val;
+  //     });
+
+  //     return transactions;
+  //   } catch (error) {
+  //     throw errors.INVALID_ADDRESS;
+  //   }
+  // }
+
+  async getHistory(network, address, startblock, endblock, page, offset, sort) {
     try {
-      let provider = new ethers.providers.EtherscanProvider(network);
-      let transactions = await provider.getHistory(address, 0, 99999999);
-      transactions.map((val, key) => {
-        let { gasPrice, gasLimit, value } = val;
-        val.gasPrice = gasPrice.toString();
-        val.gasLimit = gasLimit.toString();
-        val.value = this.bigNumberToEther(value);
-        return val;
+      let response = await getTransactions(
+        network,
+        address,
+        startblock,
+        endblock,
+        page,
+        offset,
+        sort
+      );
+      let transactions = response.result;
+      transactions.map(transaction => {
+        // TODO: Refactor property key called gasLimit
+        // because there is no gasLimit on each transaction
+        let { gasPrice, gasUsed: gasLimit, value } = transaction;
+        transaction.gasPrice = gasPrice.toString();
+        transaction.gasLimit = gasLimit.toString();
+        transaction.value = this.bigNumberToEther(value);
+        return transaction;
       });
 
       return transactions;
@@ -99,7 +130,6 @@ class EthersHelper {
   }
 
   async getGasPrice(network) {
-    console.log("getGasPrice:" + network);
     let gasPrice = await this.getProvider(network).getGasPrice();
     return {
       network: network,
@@ -197,7 +227,7 @@ class EthersHelper {
 
       return { address: contract.address };
     } catch (error) {
-      console.log("Something went wrong");
+      console.log('Something went wrong');
       console.log(error);
     }
   }
@@ -259,7 +289,7 @@ class EthersHelper {
     let overrides = {
       value
     };
-    console.log("executeWithParamsPayable: overrides=", overrides);
+    console.log('executeWithParamsPayable: overrides=', overrides);
     let wallet = new Wallet(privateKey, this.getProvider(network));
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params, overrides);
@@ -309,7 +339,7 @@ class EthersHelper {
   }
 
   parseEther(value) {
-    return utils.parseUnits(string, "ether");
+    return utils.parseUnits(string, 'ether');
   }
 
   parseUnits(value, decimalOrUnits) {
@@ -317,11 +347,11 @@ class EthersHelper {
   }
 
   weiToEther(value) {
-    return this.bigNumberToEther(this.parseUnits(value.toString(), "wei"));
+    return this.bigNumberToEther(this.parseUnits(value.toString(), 'wei'));
   }
 
   gweiToEther(value) {
-    return this.bigNumberToEther(this.parseUnits(value.toString(), "gwei"));
+    return this.bigNumberToEther(this.parseUnits(value.toString(), 'gwei'));
   }
 }
 
