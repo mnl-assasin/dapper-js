@@ -48,6 +48,7 @@ class EtherWallet {
     if (isUndefined(request)) {
       throw errors.UNDEFINED;
     } else {
+      console.log("request=", request);
       let data = await ethers.getHistory(request.network, request.address);
       return result.build(data);
     }

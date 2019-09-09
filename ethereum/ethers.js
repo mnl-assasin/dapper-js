@@ -1,11 +1,11 @@
-const ethers = require('ethers');
-const errors = require('../builder/errors');
+const ethers = require("ethers");
+const errors = require("../builder/errors");
 const Wallet = ethers.Wallet;
 const utils = ethers.utils;
 // const providers = ethers.providers;
-const { getTransactions } = require('../util/etherscan-api');
+const { getTransactions } = require("../util/etherscan-api");
 
-const etherscanAPI = require('etherscan-api').init('');
+const etherscanAPI = require("etherscan-api").init("");
 
 class EthersHelper {
   createWallet(wallet, path) {
@@ -94,6 +94,7 @@ class EthersHelper {
   // }
 
   async getHistory(network, address, startblock, endblock, page, offset, sort) {
+    console.log("address=", address);
     try {
       let response = await getTransactions(
         network,
@@ -104,6 +105,7 @@ class EthersHelper {
         offset,
         sort
       );
+      console.log("response=", response);
       let transactions = response.result;
       transactions.map(transaction => {
         // TODO: Refactor property key called gasLimit
@@ -117,6 +119,7 @@ class EthersHelper {
 
       return transactions;
     } catch (error) {
+      console.log(error);
       throw errors.INVALID_ADDRESS;
     }
   }
@@ -227,7 +230,7 @@ class EthersHelper {
 
       return { address: contract.address };
     } catch (error) {
-      console.log('Something went wrong');
+      console.log("Something went wrong");
       console.log(error);
     }
   }
@@ -289,7 +292,7 @@ class EthersHelper {
     let overrides = {
       value
     };
-    console.log('executeWithParamsPayable: overrides=', overrides);
+    console.log("executeWithParamsPayable: overrides=", overrides);
     let wallet = new Wallet(privateKey, this.getProvider(network));
     let contract = this.getContract(address, abi, wallet);
     let result = await contract[method](...params, overrides);
@@ -339,7 +342,7 @@ class EthersHelper {
   }
 
   parseEther(value) {
-    return utils.parseUnits(string, 'ether');
+    return utils.parseUnits(string, "ether");
   }
 
   parseUnits(value, decimalOrUnits) {
@@ -347,11 +350,11 @@ class EthersHelper {
   }
 
   weiToEther(value) {
-    return this.bigNumberToEther(this.parseUnits(value.toString(), 'wei'));
+    return this.bigNumberToEther(this.parseUnits(value.toString(), "wei"));
   }
 
   gweiToEther(value) {
-    return this.bigNumberToEther(this.parseUnits(value.toString(), 'gwei'));
+    return this.bigNumberToEther(this.parseUnits(value.toString(), "gwei"));
   }
 }
 

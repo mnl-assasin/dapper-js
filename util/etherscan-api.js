@@ -1,8 +1,8 @@
-const etherscanApi = require('etherscan-api');
-const setDefault = require('./setDefault');
+const etherscanApi = require("etherscan-api");
+const setDefault = require("./setDefault");
 const createdEtherscanAPIs = {};
-const createEtherscanAPI = (apiKey, network = 'mainnet') => {
-  network = setDefault(network, 'mainnet');
+const createEtherscanAPI = (apiKey = "", network = "mainnet") => {
+  network = setDefault(network, "mainnet");
   const key = `${apiKey}${network}`;
   if (createdEtherscanAPIs.hasOwnProperty(key)) {
     return createdEtherscanAPIs[key];
@@ -13,24 +13,24 @@ const createEtherscanAPI = (apiKey, network = 'mainnet') => {
   return apiInstance;
 };
 
-const sortEnum = ['asc', 'desc'];
+const sortEnum = ["asc", "desc"];
 const getTransactions = (
   network,
   address,
   startblock = 1,
-  endblock = 'latest',
+  endblock = "latest",
   page = 1,
   offset = 10,
-  sort = 'asc'
+  sort = "asc"
 ) => {
-  const apiInstance = createEtherscanAPI(_, network);
+  const apiInstance = createEtherscanAPI("", network);
   startblock = setDefault(startblock, 1);
-  endblock = setDefault(endblock, 'latest');
+  endblock = setDefault(endblock, "latest");
   page = setDefault(page, 1);
   offset = setDefault(offset, 10);
-  sort = setDefault(sort, 'asc');
+  sort = setDefault(sort, "asc");
   if (!sortEnum.includes(sort.toLowerCase())) {
-    sort = 'asc';
+    sort = "asc";
   }
   return apiInstance.account.txlist(
     address,
