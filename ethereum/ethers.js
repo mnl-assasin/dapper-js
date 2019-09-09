@@ -2,14 +2,12 @@ const ethers = require("ethers");
 const errors = require("../builder/errors");
 const Wallet = ethers.Wallet;
 const utils = ethers.utils;
-// const providers = ethers.providers;
-const { getTransactions } = require("../util/etherscan-api");
 
-const etherscanAPI = require("etherscan-api").init("");
+const setDefault = require("../util/setDefault");
+const { getTransactions } = require("../util/etherscan-api");
 
 class EthersHelper {
   createWallet(wallet, path) {
-    // console.log(wallet);
     let signingKey = wallet.signingKey;
     return {
       mnemonic: signingKey.mnemonic,
@@ -75,41 +73,26 @@ class EthersHelper {
     };
   }
 
-  // async getHistory(network, address) {
-  //   try {
-  //     let provider = new ethers.providers.EtherscanProvider(network);
-  //     let transactions = await provider.getHistory(address, 0, 99999999);
-  //     transactions.map((val, key) => {
-  //       let { gasPrice, gasLimit, value } = val;
-  //       val.gasPrice = gasPrice.toString();
-  //       val.gasLimit = gasLimit.toString();
-  //       val.value = this.bigNumberToEther(value);
-  //       return val;
-  //     });
+  async getHistory(network, address, startBlock, endBlock, page, offset, sort) {
+    network = setDefault(network, "mainnet");
+    startBlock = setDefault(startBlock, "1");
+    endBlock = setDefault(endBlock, "latest");
+    page = setDefault(page, 1);
+    (offset = setDefault(offset, 5)), (sort = setDefault(sort, "desc"));
 
-  //     return transactions;
-  //   } catch (error) {
-  //     throw errors.INVALID_ADDRESS;
-  //   }
-  // }
-
-  async getHistory(network, address, startblock, endblock, page, offset, sort) {
-    console.log("address=", address);
     try {
       let response = await getTransactions(
         network,
         address,
-        startblock,
-        endblock,
+        startBlock,
+        endBlock,
         page,
         offset,
         sort
       );
-      console.log("response=", response);
+
       let transactions = response.result;
       transactions.map(transaction => {
-        // TODO: Refactor property key called gasLimit
-        // because there is no gasLimit on each transaction
         let { gasPrice, gasUsed: gasLimit, value } = transaction;
         transaction.gasPrice = gasPrice.toString();
         transaction.gasLimit = gasLimit.toString();
@@ -117,7 +100,7 @@ class EthersHelper {
         return transaction;
       });
 
-      return transactions;
+      return { transactions, page, offset };
     } catch (error) {
       console.log(error);
       throw errors.INVALID_ADDRESS;

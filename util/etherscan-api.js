@@ -17,25 +17,28 @@ const sortEnum = ["asc", "desc"];
 const getTransactions = (
   network,
   address,
-  startblock = 1,
-  endblock = "latest",
-  page = 1,
-  offset = 10,
-  sort = "asc"
+  startBlock,
+  endBlock,
+  page,
+  offset,
+  sort
 ) => {
-  const apiInstance = createEtherscanAPI("", network);
-  startblock = setDefault(startblock, 1);
-  endblock = setDefault(endblock, "latest");
-  page = setDefault(page, 1);
-  offset = setDefault(offset, 10);
-  sort = setDefault(sort, "asc");
+  // console.log("network=", network);
+  // console.log("address=", address);
+  // console.log("startBlock=", startBlock);
+  // console.log("endBlock=", endBlock);
+  // console.log("page=", page);
+  // console.log("offset=", offset);
+  // console.log("sort=", sort);
+
+  const etherScan = createEtherscanAPI("", network);
   if (!sortEnum.includes(sort.toLowerCase())) {
-    sort = "asc";
+    sort = "desc";
   }
-  return apiInstance.account.txlist(
+  return etherScan.account.txlist(
     address,
-    startblock,
-    endblock,
+    startBlock,
+    endBlock,
     page,
     offset,
     sort
