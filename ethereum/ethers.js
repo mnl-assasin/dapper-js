@@ -2,11 +2,12 @@ const ethers = require("ethers");
 const errors = require("../builder/errors");
 const Wallet = ethers.Wallet;
 const utils = ethers.utils;
-const providers = ethers.providers;
+
+const setDefault = require("../util/setDefault");
+const { getTransactions } = require("../util/etherscan-api");
 
 class EthersHelper {
   createWallet(wallet, path) {
-    // console.log(wallet);
     let signingKey = wallet.signingKey;
     return {
       mnemonic: signingKey.mnemonic,
@@ -72,20 +73,36 @@ class EthersHelper {
     };
   }
 
-  async getHistory(network, address) {
+  async getHistory(network, address, startBlock, endBlock, page, offset, sort) {
+    network = setDefault(network, "mainnet");
+    startBlock = setDefault(startBlock, "1");
+    endBlock = setDefault(endBlock, "latest");
+    page = setDefault(page, 1);
+    (offset = setDefault(offset, 5)), (sort = setDefault(sort, "desc"));
+
     try {
-      let provider = new ethers.providers.EtherscanProvider(network);
-      let transactions = await provider.getHistory(address, 0, 99999999);
-      transactions.map((val, key) => {
-        let { gasPrice, gasLimit, value } = val;
-        val.gasPrice = gasPrice.toString();
-        val.gasLimit = gasLimit.toString();
-        val.value = this.bigNumberToEther(value);
-        return val;
+      let response = await getTransactions(
+        network,
+        address,
+        startBlock,
+        endBlock,
+        page,
+        offset,
+        sort
+      );
+
+      let transactions = response.result;
+      transactions.map(transaction => {
+        let { gasPrice, gasUsed: gasLimit, value } = transaction;
+        transaction.gasPrice = gasPrice.toString();
+        transaction.gasLimit = gasLimit.toString();
+        transaction.value = this.bigNumberToEther(value);
+        return transaction;
       });
 
-      return transactions;
+      return { transactions, page, offset };
     } catch (error) {
+      console.log(error);
       throw errors.INVALID_ADDRESS;
     }
   }
@@ -99,7 +116,6 @@ class EthersHelper {
   }
 
   async getGasPrice(network) {
-    console.log("getGasPrice:" + network);
     let gasPrice = await this.getProvider(network).getGasPrice();
     return {
       network: network,
