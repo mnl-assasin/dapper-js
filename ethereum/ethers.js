@@ -66,11 +66,22 @@ class EthersHelper {
 
   // Price in USD currency
   async getEtherPrice() {
-    let provider = new ethers.providers.EtherscanProvider();
-    let price = await provider.getEtherPrice();
-    return {
-      price
-    };
+    try {
+      let provider = new ethers.providers.EtherscanProvider();
+      let price = await provider.getEtherPrice();
+      return {
+        price
+      };
+    } catch (error) {
+      if (error.result) {
+        const { result } = JSON.parse(error.result);
+        return {
+          price: Number(result.ethusd)
+        };
+      } else {
+        throw error;
+      }
+    }
   }
 
   async getHistory(network, address, startBlock, endBlock, page, offset, sort) {
