@@ -193,7 +193,8 @@ class EthersHelper {
       value: this.stringToETH(value)
     };
 
-    return await wallet.sendTransaction(transaction);
+    const result = await wallet.sendTransaction(transaction);
+    return result;
 
     // const tx = await wallet.sendTransaction(transaction);
 
@@ -326,9 +327,10 @@ class EthersHelper {
     }
   }
 
-  stringToBigNumber(string) {
+  stringToBigNumber(str) {
     try {
-      return utils.bigNumberify(string);
+      const result = utils.bigNumberify(str);
+      return result;
     } catch (error) {
       console.log(error);
       throw errors.INVALID_BIG_NUMBER;
@@ -349,6 +351,24 @@ class EthersHelper {
 
   gweiToEther(value) {
     return this.bigNumberToEther(this.parseUnits(value.toString(), "gwei"));
+  }
+
+  /**
+   * Signing message
+   * @param {import('ethers').Wallet} wallet 
+   * @param {string} message 
+   */
+  signMesage(wallet, message) {
+    return wallet.signMessage(message);
+  }
+
+  /**
+   * Verify message
+   * @param {string} message 
+   * @param {string} signature 
+   */
+  verifyMessage(message, signature) {
+    return utils.verifyMessage(message, signature);
   }
 }
 
