@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ethers": "^4.0.25",
+    "ethers": "^5.0.9",
     "etherscan-api": "^10.0.4",
     "events": "^3.0.0",
     "validate.js": "^0.12.0"
