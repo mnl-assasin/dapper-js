@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/nodemon index.js",
-    "example": "./node_modules/.bin/nodemon examples/etherTransaction.js",
-    "contract": "./node_modules/.bin/nodemon examples/etherContract.js",
-    "appUpdateChecker": "./node_modules/.bin/nodemon examples/appUpdateChecker.js",
-    "deployContract": "./node_modules/.bin/nodemon examples/deployContract.js"
+    "start": "nodemon index.js",
+    "example": "nodemon examples/etherTransaction.js",
+    "contract": "nodemon examples/etherContract.js",
+    "appUpdateChecker": "nodemon examples/appUpdateChecker.js",
+    "deployContract": "nodemon examples/deployContract.js"
   },
   "author": "",
   "license": "ISC",
