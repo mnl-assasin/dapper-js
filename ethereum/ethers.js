@@ -7,14 +7,19 @@ const setDefault = require("../util/setDefault");
 const { getTransactions } = require("../util/etherscan-api");
 
 class EthersHelper {
+  /**
+   * Create Ethereum wallet
+   * @param {ethers.Wallet} wallet 
+   * @param {*} path 
+   */
   createWallet(wallet, path) {
-    let signingKey = wallet.signingKey;
+    const { address, publicKey, privateKey, mnemonic } = wallet;
     return {
-      mnemonic: signingKey.mnemonic,
-      privateKey: signingKey.keyPair.privateKey,
-      publicKey: signingKey.keyPair.publicKey,
-      address: signingKey.address,
-      path: path
+      path,
+      privateKey,
+      publicKey,
+      address,
+      mnemonic: mnemonic.phrase,
     };
   }
 
